@@ -1,0 +1,94 @@
+﻿<Page
+    x:Class="MangaApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MangaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    RequestedTheme="Light">
+	<Page.Resources>
+		<DataTemplate x:Key="downloadsHeader">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Show current downloads" VerticalAlignment="Top" FontSize="26.667" Tapped="showDownloads"/>
+			</Grid>
+		</DataTemplate>
+	</Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Hub x:Name="hub">
+    		<HubSection Tag="0" Header="Recent manga" Width="650" Padding="40,20,40,0">
+                
+                
+                
+    			<DataTemplate>
+    				<ListView ItemsSource="{Binding Provider.Latest}" x:Name="latest" SelectionChanged="latest_SelectionChanged">
+    					<ListView.ItemContainerStyle>
+    						<Style TargetType="ListViewItem">
+    							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    						</Style>
+    					</ListView.ItemContainerStyle>
+
+    					<ListView.ItemTemplate>
+    						<DataTemplate>
+    							<Border Background="#99000000" HorizontalAlignment="Stretch" Height="200" Margin="2.5,2.5" Width="150" BorderThickness="1" BorderBrush="#FF686868" >
+    								<Grid>
+    									<Grid.ChildrenTransitions>
+    										<TransitionCollection>
+    											<AddDeleteThemeTransition/>
+    										</TransitionCollection>
+    									</Grid.ChildrenTransitions>
+    									<Image HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="150" Source="{Binding Image}" Stretch="UniformToFill" Opacity="0.4"/>
+    									<TextBlock VerticalAlignment="Bottom" Margin="5,0,5,4" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
+    								</Grid>
+    							</Border>
+    						</DataTemplate>
+    					</ListView.ItemTemplate>
+                        
+    					<ListView.ItemsPanel>
+    						<ItemsPanelTemplate>
+    							<WrapGrid Orientation="Horizontal"/>
+    						</ItemsPanelTemplate>
+    					</ListView.ItemsPanel>
+    				</ListView>
+    			</DataTemplate>
+               
+    		</HubSection>
+    		<HubSection Tag="1" Padding="0,20,12,0" Header="Search" Width="400">
+                
+    			<DataTemplate>
+    				<Grid>
+    					<SearchBox HorizontalAlignment="Stretch" PlaceholderText="Enter the name of a manga"  KeyDown="TextBox_KeyDown" VerticalAlignment="Top"/>
+    					<ListView ItemsSource="{Binding Provider.SearchResults}" x:Name="latest" SelectionChanged="latest_SelectionChanged" Margin="0,80,0,0">
+    						<ListView.ItemContainerStyle>
+    							<Style TargetType="ListViewItem">
+    								<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    							</Style>
+    						</ListView.ItemContainerStyle>
+
+    						<ListView.ItemTemplate>
+    							<DataTemplate>
+    								<Grid Height="150" Width="150" HorizontalAlignment="Stretch" Margin="2.5,2.5">
+    									<Grid.Background>
+    										<ImageBrush Opacity="0.4" Stretch="UniformToFill" ImageSource="{Binding Image}"/>
+    									</Grid.Background>
+    									<TextBlock VerticalAlignment="Bottom" Margin="0,0,0,5" FontSize="18" TextWrapping="Wrap" Text="{Binding Name}"/>
+    								</Grid>
+    							</DataTemplate>
+    						</ListView.ItemTemplate>
+                        
+    						<ListView.ItemsPanel>
+    							<ItemsPanelTemplate>
+    								<WrapGrid Orientation="Horizontal"/>
+    							</ItemsPanelTemplate>
+    						</ListView.ItemsPanel>
+    					</ListView>
+    				</Grid>
+    			</DataTemplate>
+    		</HubSection>
+            
+    	</Hub>
+    </Grid>
+    
+    
+</Page>

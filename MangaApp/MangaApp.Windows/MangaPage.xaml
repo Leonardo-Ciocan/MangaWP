@@ -1,0 +1,97 @@
+﻿<Page
+    x:Class="MangaApp.MangaPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MangaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    RequestedTheme="Light"
+    >
+    <Page.BottomAppBar>
+        <CommandBar Background="#FFB30606">
+            <AppBarToggleButton Icon="Bullets" Label="choose" Click="chooseClicked"/>
+            <AppBarButton Icon="Download" Label="download" Click="download"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid   Background="#FFECECEC">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Opacity="0.3" Visibility="Collapsed">
+            <Image Source="{Binding Image}" Stretch="UniformToFill"/>
+        </Grid>
+        <Hub x:Name="hub">
+            <HubSection Width="650" Padding="40,0,40,40">
+                <HubSection.Background>
+                    <ImageBrush ImageSource="{Binding CurrentManga.Image}"   Stretch="UniformToFill" Opacity="0.65" >
+                        
+                    </ImageBrush>
+                </HubSection.Background>
+                <HubSection.Header>
+                    <StackPanel>
+                        <TextBlock Foreground="White"  FontSize="30" >
+                            <Run Text="&#xE121;"  FontFamily="Segoe UI Symbol"/><Run Text=" INFO" FontWeight="Light" />
+                        </TextBlock>
+                    </StackPanel>
+                </HubSection.Header>
+
+                <DataTemplate>
+                    <Grid VerticalAlignment="Bottom" >
+                        <!--<Grid.Background>
+                            <ImageBrush Opacity="0.25" ImageSource="{Binding Image}" Stretch="UniformToFill"/>
+                        </Grid.Background>-->
+                        <ScrollViewer VerticalAlignment="Bottom" Background="#B2000000" BorderThickness="0" Margin="-40,0,0,0" >
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+
+                               <!--<Border Height="250" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Center" >
+                                    <Image Source="{Binding CurrentManga.Image}"/>
+
+                                </Border>-->
+
+                                <TextBlock Foreground="White" VerticalAlignment="Top" FontSize="30" FontFamily="Segoe WP Black" FontWeight="Bold" TextWrapping="Wrap" Margin="0,5,0,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" />
+                                <TextBlock Foreground="White"  TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Stretch" FontSize="14.667" TextAlignment="Center" />
+
+                            </StackPanel>
+
+                        </ScrollViewer>
+
+                    </Grid>
+                </DataTemplate>
+            </HubSection>
+            <HubSection Padding="40,0,40,44">
+
+                <HubSection.Header>
+                    <StackPanel>
+                        <TextBlock Foreground="Black"  FontSize="30" >
+                            <Run Text="&#xE121;"  FontFamily="Segoe UI Symbol"/><Run Text=" CHAPTERS" FontWeight="Light" />
+                        </TextBlock>
+                    </StackPanel>
+                </HubSection.Header>
+                <DataTemplate>
+                    <ListView x:Name="chapters"
+                      VerticalAlignment="Stretch"        
+                      ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapters_SelectionChanged" SelectionMode="{Binding Selecting}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Gray" BorderThickness="1" Background="LightGray" VerticalAlignment="Top">
+                                    <TextBlock Foreground="Black"  FontSize="17.333" Text="{Binding Name}"/>
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                    </ListView>
+                </DataTemplate>
+            </HubSection>
+        </Hub>
+        <AppBarButton HorizontalAlignment="Left" Icon="Back" Label="" Margin="-14,-4,0,0" VerticalAlignment="Top"/>
+
+
+    </Grid>
+</Page>

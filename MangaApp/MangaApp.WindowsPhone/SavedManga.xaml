@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="MangaApp.SavedManga"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MangaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	<Page.Resources>
+		<CollectionViewSource x:Name="cvsActivities" IsSourceGrouped="True"/>
+		<DataTemplate x:Key="DataTemplate1">
+			<Grid>
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding TransferGroup.Name}" VerticalAlignment="Top"/>
+			</Grid>
+		</DataTemplate>
+	</Page.Resources>
+    <Grid Background="{ThemeResource PhoneChromeBrush}">
+    	<ListView x:Name="list" ItemTemplate="{StaticResource DataTemplate1}"/>
+
+    </Grid>
+</Page>
