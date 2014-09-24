@@ -4,7 +4,7 @@
     xmlns:local="using:MangaApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:UIFragments="using:UIFragments" x:Name="page"
+     x:Name="page"
     x:Class="MangaApp.ReaderPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -126,11 +126,10 @@
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-			<UIFragments:SuperAppBar x:Name="upperAppBar" VerticalAlignment="Top" Grid.ColumnSpan="3" Background="#B20073E0"/>
-
+			
             
 		</Grid>
-		<Grid x:Name="overlay" Height="60" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+		<Grid x:Name="overlay" Height="60" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5" Background="#7F000000">
 			<Grid.Projection>
 				<PlaneProjection/>
 			</Grid.Projection>
@@ -142,7 +141,7 @@
 					<SolidColorBrush Color="#000" Opacity="0.15999999642372131"/>
 				</Slider.Background>
 			</Slider>
-			<Grid Margin="10,79,10,11" Visibility="Collapsed">
+			<Grid Margin="10,0">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*"/>
 					<ColumnDefinition Width="*"/>
@@ -150,7 +149,7 @@
 				<ToggleButton x:Name="horizontalButton" Content="Horizontal" HorizontalAlignment="Stretch" IsChecked="True"/>
 				<ToggleButton x:Name="verticalButton" Content="Vertical"  HorizontalAlignment="Stretch" Grid.Column="1"/>
 			</Grid>
-			<UIFragments:SuperAppBar x:Name="appbar" Background="#B20073E0" VerticalAlignment="Bottom" Margin="0"/>
+			
 		</Grid>
         
 	</Grid>

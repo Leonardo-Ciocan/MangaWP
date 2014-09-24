@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using UIFragments;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -19,6 +18,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -44,7 +44,7 @@ namespace MangaApp
             StatusBar.GetForCurrentView().BackgroundOpacity = 0;
             StatusBar.GetForCurrentView().BackgroundColor = Windows.UI.Color.FromArgb(0, 0, 0, 1);
             await StatusBar.GetForCurrentView().HideAsync();
-
+            intro.Begin();
             /*var col = new SolidColorBrush(Colors.Red);
             var btn1 = new SuperButton { Label = "Select chapters", HighlightColor = col  };
 
@@ -61,53 +61,72 @@ namespace MangaApp
                 btn1.Label = (btn1.Label == "Select chapters") ? "Unselect all" : "Select chapters";
             };*/
 
+
         }
 
-
+        bool loaded = false;
         AppModel model;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            model = e.Parameter as AppModel;
-            DataContext = e.Parameter;
-            Manga m = model.CurrentManga;
-            
-
-            if (!m.Saved)
+            if (!loaded)
             {
-                m.Chapters.Clear();
-                HtmlDocument htmlDocument2 = new HtmlDocument();
-                htmlDocument2.OptionFixNestedTags = true;
-                htmlDocument2.LoadHtml(await DownloadPageStringAsync(m.Url));
+                loaded = true;
+                model = e.Parameter as AppModel;
+                DataContext = e.Parameter;
+                Manga m = model.CurrentManga;
+                //img.Source = new BitmapImage(new Uri(m.Image));
 
-                m.Image = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "mangaimg").First().Descendants().First().Attributes["src"].Value;
-
-                foreach (HtmlNode link in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td" && x.ParentNode.Descendants("div").Any(y => y.Attributes["class"].Value == "chico_manga")))
+                if (!m.Saved)
                 {
-                    m.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n",""), Url = link.Attributes["href"].Value });
+                    m.Chapters.Clear();
+                    HtmlDocument htmlDocument2 = new HtmlDocument();
+                    htmlDocument2.OptionFixNestedTags = true;
+                    htmlDocument2.LoadHtml(await DownloadPageStringAsync(m.Url));
+
+                    m.Image = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "mangaimg").First().Descendants().First().Attributes["src"].Value;
+
+                    foreach (HtmlNode link in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td" && x.ParentNode.Descendants("div").Any(y => y.Attributes["class"].Value == "chico_manga")))
+                    {
+                        m.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n", "").Replace(m.Name , ""), Url = link.Attributes["href"].Value });
+                    }
+
+                    m.Description = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "readmangasum").First().Descendants("p").First().InnerText;
                 }
-
-                m.Description = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "readmangasum").First().Descendants("p").First().InnerText;
-            }
-            /*chapters.SelectionMode = ListViewSelectionMode.None;
-            chapters.IsItemClickEnabled = true;
-            chapters.ItemClick += (a, b) =>
-            {
+                /*chapters.SelectionMode = ListViewSelectionMode.None;
+                chapters.IsItemClickEnabled = true;
+                chapters.ItemClick += (a, b) =>
+                {
                 
-                Frame.Navigate(typeof(ReaderPage), new object[] { (a as ListView).SelectedIndex, model.CurrentManga });
-            };*/
+                    Frame.Navigate(typeof(ReaderPage), new object[] { (a as ListView).SelectedIndex, model.CurrentManga });
+                };*/
 
-            header.RenderTransform = new TranslateTransform();
-            var scroller = chapters.GetFirstDescendantOfType<ScrollViewer>();
+                var tr = new TranslateTransform();
+                header.RenderTransform = tr;
+                imgGrid.RenderTransform = tr;
+                var scroller = chapters.GetFirstDescendantOfType<ScrollViewer>();
 
-            scroller.ViewChanging += (a, b) =>
-            {
-                (header.RenderTransform as TranslateTransform).Y = -scroller.VerticalOffset / 3.5;
+                double max = 0.6;
+                scroller.ViewChanged += (a, b) =>
+                {
+                    Debug.WriteLine(scroller.VerticalOffset);
+                    var i = -scroller.VerticalOffset / 2.5;
+                    tr.Y = i;
+                    tr.Y = i;
+                    //img.Opacity = 0.6-(scroller.VerticalOffset / 400.0) * 0.6;
+                    // (header.RenderTransform as CompositeTransform).Rotation = -scroller.VerticalOffset / 3.5;
+                    //header.Opacity = 1-Math.Max(0.1 , scroller.VerticalOffset)/400;
+                };
 
-               // (header.RenderTransform as CompositeTransform).Rotation = -scroller.VerticalOffset / 3.5;
-                //header.Opacity = 1-Math.Max(0.1 , scroller.VerticalOffset)/400;
-            };
-
+                chapters.SelectionMode = ListViewSelectionMode.None;
+                chapters.IsItemClickEnabled = true;
+                chapters.ItemClick += (a, b) =>
+                {
+                    Frame.Navigate(typeof(ReaderPage), new object[] { model.CurrentManga.Chapters.IndexOf(b.ClickedItem as Chapter), model.CurrentManga });
+                };
+            }
         }
+
+
 
         public async Task<string> DownloadPageStringAsync(string url)
         {

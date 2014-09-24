@@ -8,7 +8,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using UIFragments;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -51,29 +50,9 @@ namespace MangaApp
             index = (int)(e.Parameter as object[])[0];
             chapter = manga.Chapters[index];
 
-            var col = new SolidColorBrush(Colors.Red);
-            var btn1 = new SuperButton { Label = "Previous Chapter", HighlightColor = col };
-            var btn2 = new SuperButton { Label = "Next Chapter", HighlightColor = col };
-            upperAppBar.ShowButtonBar(new List<UIFragments.SuperButton>()
-                {
-                    btn1 , btn2
-                });
+            
 
-            btn1.Tapped += (a, b) =>
-            {
-                if (manga.Chapters.Count <= index + 1) btn2.Label = "";
-                try
-                {
-                    FillChapter(manga.Chapters[++index]);
-                }
-                catch { }
-            };
-            btn2.Tapped += (a, b) =>
-            {
-                
-                if (index - 1 < 0) btn1.Label = "";
-                FillChapter(manga.Chapters[--index]);
-            };
+           
 
 
 
@@ -114,45 +93,10 @@ namespace MangaApp
                 await menu.ShowAtAsync(a as FrameworkElement);
             */
 
-            var col = new SolidColorBrush(Colors.Red);
-            var btn1 = new SuperButton { Label = "Change to vertical layout", HighlightColor = col };
-
-            appbar.ShowButtonBar(new List<UIFragments.SuperButton>()
-                {
-                    btn1
-                });
+            
 
 
-            btn1.Tapped += (a, b) =>
-            {
-                if(btn1.Label == "Change to vertical"){
-                    verticalButton.IsChecked = false;
-                images.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                images2.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                for (int k = 0; k < images2.Items.Count; k++)
-                {
-                    object i = images2.Items[k];
-
-                    if (i == null) continue;
-                    object x = i;
-                    images2.Items.Remove(i);
-                    (images.Items[k] as FlipViewItem).Content = i;
-                }
-                }
-                else{
-                     horizontalButton.IsChecked = false;
-                images.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-                images2.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                foreach (FlipViewItem i in images.Items)
-                {
-                    if (i.Content == null) continue;
-                    object x = i.Content;
-                    i.Content = null;
-                    images2.Items.Add(x);
-                }
-                }
-                btn1.Label = (btn1.Label == "Change to vertical layout") ? "Change to horizontal layout" : "Change to vertical layout";
-            };
+            
 
             overlay.Tapped += (AccessibilitySettings, b) => b.Handled = true;
             overlay2.Tapped += (AccessibilitySettings, b) => b.Handled = true;

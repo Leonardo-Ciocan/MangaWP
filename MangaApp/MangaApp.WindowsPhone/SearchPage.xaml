@@ -14,39 +14,31 @@
     	</Grid.Background>
     	<TextBox Margin="10,12,10,0" TextWrapping="Wrap" VerticalAlignment="Top" PlaceholderText="Enter a manga name" KeyDown="keyDown"/>
 
-		<ListView ItemsSource="{Binding Provider.SearchResults}" x:Name="searchlist" SelectionChanged="SelectionChanged" Margin="0,68,0,0">
-						<ListView.ItemContainerStyle>
-							<Style TargetType="ListViewItem">
-								<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-							</Style>
-						</ListView.ItemContainerStyle>
+        <ListView ItemsSource="{Binding Provider.SearchResults}" x:Name="searchlist" SelectionChanged="SelectionChanged" Margin="0,68,0,0">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
 
-						<ListView.ItemTemplate>
-							<DataTemplate>
-								<Grid Height="100" Width="200" HorizontalAlignment="Stretch" Margin="2.5,2.5" Background="#99000000">
-									<Image Source="{Binding Image}" Stretch="UniformToFill" Opacity="0.4"/>
-									<TextBlock VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
-								</Grid>
-							</DataTemplate>
-						</ListView.ItemTemplate>
-                        
-						<ListView.ItemsPanel>
-							<ItemsPanelTemplate>
-								<WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
-							</ItemsPanelTemplate>
-						</ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="100" Width="200" HorizontalAlignment="Stretch" Margin="2.5,2.5" Background="#99000000">
+                        <Image Source="{Binding Image}" Stretch="UniformToFill" Opacity="0.4"/>
+                        <TextBlock VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
 
 
-					</ListView>
+        </ListView>
     </Grid>
 
-	<Page.Transitions>
-		<TransitionCollection>
-			<NavigationThemeTransition>
-				<NavigationThemeTransition.DefaultNavigationTransitionInfo>
-					<SlideNavigationTransitionInfo/>
-				</NavigationThemeTransition.DefaultNavigationTransitionInfo>
-			</NavigationThemeTransition>
-		</TransitionCollection>
-	</Page.Transitions>
+	
 </Page>

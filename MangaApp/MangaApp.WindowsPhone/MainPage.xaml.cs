@@ -87,8 +87,8 @@ namespace MangaApp
                     st.Children.Add(yanim);
                     st.Children.Add(w);
                     st.Children.Add(h);
-                    chapters.Visibility = Visibility.Collapsed;
-                    grid.Visibility = Visibility.Collapsed;
+                    //chapters.Visibility = Visibility.Collapsed;
+                    //grid.Visibility = Visibility.Collapsed;
                     st.Completed += (x, k) =>
                     {
                         
@@ -125,15 +125,22 @@ namespace MangaApp
                 
                 DataContext = model;
                 
-                loadingRing.IsActive = true;
+                //loadingRing.IsActive = true;
                 await model.Provider.getLatest();
-                loadingRing.IsActive = false;
+                //loadingRing.IsActive = false;
                 
                 loaded = true;
 
+               // chapters.SelectionMode = ListViewSelectionMode.None;
+                
             }
         }
 
+        async void chapter_tapped(object sender, TappedRoutedEventArgs e)
+        {
+            //int index = chapters.IndexFromContainer(sender as ListViewItem);
+            //Frame.Navigate(typeof(ReaderPage), new object[] { index, model.CurrentManga });
+        }
         
 
         
@@ -243,14 +250,14 @@ namespace MangaApp
             (inner as Grid).Tag = item;
             st.Completed += async (a, b) =>
             {
-                chapters.ItemsSource = model.CurrentManga.Chapters;
+                //chapters.ItemsSource = model.CurrentManga.Chapters;
                 if (m == null) return;
                 //svar v = new NavigationThemeTransition();
                 //v.DefaultNavigationTransitionInfo = null;
-                //Frame.Navigate(typeof(MangaPage), model, null);
-                chapters.Visibility = Visibility.Visible;
-                grid.Visibility = Visibility.Visible;
-                introInfo.Begin();
+                Frame.Navigate(typeof(MangaPage), model, null);
+                //chapters.Visibility = Visibility.Visible;
+                //grid.Visibility = Visibility.Visible;
+                //introInfo.Begin();
             };
             st.Begin();
         }
@@ -292,9 +299,9 @@ namespace MangaApp
             int x = 0;
         }
 
-        private void chapter_changed(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        private void chapter_clicked(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
-        	// TODO: Add event handler implementation here.
+            int x;
         }
     }
 }

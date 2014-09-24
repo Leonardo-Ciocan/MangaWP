@@ -4,7 +4,7 @@
     xmlns:local="using:MangaApp"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:UIFragments="using:UIFragments"
+
     x:Class="MangaApp.MangaPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -12,7 +12,46 @@
 		<DataTemplate x:Key="DataTemplate1">
 			<Grid Height="400"/>
 		</DataTemplate>
-	</Page.Resources>
+		<Storyboard x:Name="intro">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<ExponentialEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="grid">
+				<EasingDoubleKeyFrame KeyTime="0" Value="250"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<ExponentialEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock">
+				<EasingDoubleKeyFrame KeyTime="0" Value="90"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<ExponentialEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock1">
+				<EasingDoubleKeyFrame KeyTime="0" Value="90"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+					<EasingDoubleKeyFrame.EasingFunction>
+						<ExponentialEase EasingMode="EaseOut"/>
+					</EasingDoubleKeyFrame.EasingFunction>
+				</EasingDoubleKeyFrame>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<DataTemplate x:Key="DataTemplate2">
+			<Grid Height="60"/>
+		</DataTemplate>
+
+       
+    </Page.Resources>
 	<Page.BottomAppBar>
 		<CommandBar Opacity="0.9">
 			<CommandBar.SecondaryCommands>
@@ -28,114 +67,49 @@
 	</Page.BottomAppBar>
 
 	<Grid Background="{ThemeResource PhoneChromeBrush}" Margin="0">
-		<Grid.ChildrenTransitions>
-			<TransitionCollection>
-				<EntranceThemeTransition FromHorizontalOffset="100"/>
-			</TransitionCollection>
-		</Grid.ChildrenTransitions>
-		<Grid Opacity="0.3" Visibility="Collapsed">
-			<Image Source="{Binding Image}" Stretch="UniformToFill"/>
-		</Grid>
 		<Grid Height="121" VerticalAlignment="Top" Margin="0,-38,0,0" Background="#FFB30606" Visibility="Collapsed"/>
-		<Hub x:Name="hub" Margin="0,27,0,0" Visibility="Collapsed">
-			<HubSection Padding="0,0,10,0">
-				<HubSection.Header>
-					<StackPanel>
-						<TextBlock FontSize="30" >
-							<Run Text="Info" FontFamily="Segoe WP" FontWeight="Light" />
-						</TextBlock>
-					</StackPanel>
-				</HubSection.Header>
-                
-				<DataTemplate>
-					<Grid Margin="0" >
-						<!--<Grid.Background>
-                            <ImageBrush Opacity="0.25" ImageSource="{Binding Image}" Stretch="UniformToFill"/>
-                        </Grid.Background>-->
-						<ScrollViewer Margin="0" >
-							<StackPanel Orientation="Vertical" VerticalAlignment="Top">
-                        
-								<Border Height="400" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Center" >
-									<Image Source="{Binding CurrentManga.Image}"/>
-                        
-								</Border>
-                        
-								<TextBlock VerticalAlignment="Top" FontSize="30" FontFamily="Segoe WP" FontWeight="Bold" TextWrapping="Wrap" Margin="0,5,0,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" />
-								<TextBlock TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Stretch" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" />
-                        
-							</StackPanel>
-                        
-						</ScrollViewer>
-                        
-					</Grid>
-				</DataTemplate>
-			</HubSection>
-			<HubSection>
-                
-				<HubSection.Header>
-					<StackPanel>
-						<TextBlock FontSize="30" >
-							<Run Text="Chapters" FontFamily="Segoe WP" FontWeight="Light" />
-						</TextBlock>
-					</StackPanel>
-				</HubSection.Header>
-				<DataTemplate>
-					<Grid>
-                    
-						<ListView x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapters_SelectionChanged" SelectionMode="{Binding Selecting}">
-							<ListView.ItemTemplate>
-								<DataTemplate>
-								<ListViewItem FontSize="20" Background="Transparent">
-									<ListViewItem.Content>
-									<TextBlock VerticalAlignment="Stretch" FontSize="19" Text="{Binding Name}" FontFamily="Segoe WP"/>
-									</ListViewItem.Content>
-								</ListViewItem>
-										
-									
-								</DataTemplate>
-							</ListView.ItemTemplate>
-                    
-						</ListView>
-						<Image Source="{Binding CurrentManga.Image}" Margin="0.833,1,340.166,281"/>
+		<Grid x:Name="imgGrid"  Height="400" HorizontalAlignment="Stretch" Margin="0" Background="Black" VerticalAlignment="Top">
+											<Image x:Name="img" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding CurrentManga.ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
+											
+											<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" StrokeThickness="0" >
+												<Rectangle.Fill>
+													<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+														<GradientStop Offset="0.671"/>
+														<GradientStop Color="#7F000000" Offset="1"/>
+													</LinearGradientBrush>
+												</Rectangle.Fill>
+											</Rectangle>
+										</Grid>
+		<Grid x:Name="grid" Margin="0" RenderTransformOrigin="0.5,0.5" Opacity="0">
+			<Grid.RenderTransform>
+				<CompositeTransform TranslateY="250"/>
+			</Grid.RenderTransform>
 
 
-					</Grid>
-
-
-				</DataTemplate>
-			</HubSection>
-		</Hub>
-		<Grid Margin="0" Background="White">
-
-
-			<Grid x:Name="header" Margin="0" VerticalAlignment="Top" Background="Black">
-                    
-				<Image Source="{Binding CurrentManga.Image}" VerticalAlignment="Top" Height="400" Stretch="UniformToFill" Opacity="0.4"/>
-				<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="BLEACH" VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="40" FontWeight="Bold" Opacity="0.95" Visibility="Collapsed"/>
-				<TextBlock VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" />
-				<TextBlock TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="12,58,12,0" Height="332" Foreground="White" />
-				<Rectangle Stroke="Black" Margin="0">
-					<Rectangle.Fill>
-						<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-							<GradientStop Offset="0.671"/>
-							<GradientStop Color="#7F000000" Offset="1"/>
-						</LinearGradientBrush>
-					</Rectangle.Fill>
-				</Rectangle>
+			<Grid x:Name="header" Margin="0" VerticalAlignment="Top"><TextBlock x:Name="textBlock" VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" >
+					<TextBlock.Projection>
+						<PlaneProjection/>
+					</TextBlock.Projection>
+				</TextBlock>
+				<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="12,58,12,0" Height="332" Foreground="White" >
+					<TextBlock.Projection>
+						<PlaneProjection/>
+					</TextBlock.Projection>
+				</TextBlock>
 
 
 			</Grid>
-
-
-			<ListView x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapters_SelectionChanged" SelectionMode="{Binding Selecting , Mode=TwoWay}" HeaderTemplate="{StaticResource DataTemplate1}">
+			<ListView x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapters_SelectionChanged" SelectionMode="Single" HeaderTemplate="{StaticResource DataTemplate1}" FooterTemplate="{StaticResource DataTemplate2}" Background="#00000000">
 				<ListView.ItemTemplate>
 					<DataTemplate>
-						<ListViewItem HorizontalAlignment="Stretch" Padding="20" FontSize="20" Background="White">
-							<Grid>
-								<TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black"/>
-								<Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
-							</Grid>
-						</ListViewItem>
+						
+							<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+								<Grid>
+									<TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black"/>
+									<Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
+								</Grid>
+							</Border>
+						
 										
 									
 					</DataTemplate>
@@ -154,13 +128,5 @@
 
 	</Grid>
 
-	<Page.Transitions>
-    <TransitionCollection>
-        <NavigationThemeTransition>
-            <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                <SlideNavigationTransitionInfo/>
-            </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-        </NavigationThemeTransition>
-    </TransitionCollection>
-</Page.Transitions>
+	
 </Page>

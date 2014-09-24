@@ -23,34 +23,7 @@
 		<DataTemplate x:Key="DataTemplate2">
 			<Grid Height="400"/>
 		</DataTemplate>
-		<Storyboard x:Name="introInfo">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="grid">
-				<EasingDoubleKeyFrame KeyTime="0" Value="250"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="chapters">
-				<EasingDoubleKeyFrame KeyTime="0" Value="250"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
-				<EasingDoubleKeyFrame KeyTime="0" Value="0.5"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="chapters">
-				<EasingDoubleKeyFrame KeyTime="0" Value="0.5"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimation Duration="0:0:0.5" To="0.5" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.CenterOfRotationZ)" Storyboard.TargetName="textBlock" d:IsOptimized="True"/>
-			<DoubleAnimation Duration="0:0:0.5" To="0.5" Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.CenterOfRotationZ)" Storyboard.TargetName="textBlock1" d:IsOptimized="True"/>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock">
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="90"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock1">
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="90"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-			</DoubleAnimationUsingKeyFrames>
-		</Storyboard>
+		
 	</Page.Resources>
 	<Page.BottomAppBar>
 		<CommandBar BorderBrush="Red" BorderThickness="0,1,0,0" Opacity="0.9">
@@ -66,58 +39,58 @@
 	</Page.BottomAppBar>
 
 	<Grid x:Name="uiroot" Background="{ThemeResource PhoneChromeBrush}">
-		<Hub x:Name="hub" Margin="0,27,0,0">
-			<HubSection Tag="0" Header="">
+		<HubSection Tag="0" Header="" Margin="0" HorizontalAlignment="Center">
                 
                 
                 
-				<DataTemplate>
-					<Grid Margin="0,-29,-0.167,0.333">
-						<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="53.333" FontWeight="Light" Margin="0" Foreground="#FFDADADA">
-							<Span FontFamily="Segoe UI Symbol">
-								<Run Text="&#xE121;"/>
-							</Span>
-						</TextBlock>
-						<ListView ItemsSource="{Binding Provider.Latest}" x:Name="latest" SelectionChanged="latest_SelectionChanged"  FooterTemplate="{StaticResource Footer}" HeaderTemplate="{StaticResource DataTemplate1}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="item_clicked">
-							<ListView.ItemContainerStyle>
-								<Style TargetType="ListViewItem">
-									<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-								</Style>
-							</ListView.ItemContainerStyle>
+			<DataTemplate>
+				<Grid Margin="0,-29,-0.167,0.333">
+					<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="53.333" FontWeight="Light" Margin="0" Foreground="#FFDADADA">
+						<Span FontFamily="Segoe UI Symbol">
+							<Run Text="&#xE121;"/>
+						</Span>
+					</TextBlock>
+					<ListView ItemsSource="{Binding Provider.Latest}" x:Name="latest" SelectionChanged="latest_SelectionChanged"  FooterTemplate="{StaticResource Footer}" HeaderTemplate="{StaticResource DataTemplate1}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="item_clicked">
+						<ListView.ItemContainerStyle>
+							<Style TargetType="ListViewItem">
+								<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+							</Style>
+						</ListView.ItemContainerStyle>
 
-							<ListView.ItemTemplate>
-								<DataTemplate>
-									<Grid Tapped="item_tapped" Width="100" Height="150" Margin="2.5">
-										<Grid  Height="150" Width="100" HorizontalAlignment="Stretch" Margin="0" Background="Black">
-											<Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding Image}" Stretch="UniformToFill" Opacity="0.6"/>
-											<TextBlock HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
-											<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" >
-												<Rectangle.Fill>
-													<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-														<GradientStop Offset="0.671"/>
-														<GradientStop Color="#7F000000" Offset="1"/>
-													</LinearGradientBrush>
-												</Rectangle.Fill>
-											</Rectangle>
-										</Grid>
+						<ListView.ItemTemplate>
+							<DataTemplate>
+								<Grid Tapped="item_tapped" Width="100" Height="150" Margin="2.5">
+									<Grid  Height="150" Width="100" HorizontalAlignment="Stretch" Margin="0" Background="Black">
+										<Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
+										<TextBlock HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
+										<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" >
+											<Rectangle.Fill>
+												<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+													<GradientStop Offset="0.671"/>
+													<GradientStop Color="#7F000000" Offset="1"/>
+												</LinearGradientBrush>
+											</Rectangle.Fill>
+										</Rectangle>
 									</Grid>
-								</DataTemplate>
-							</ListView.ItemTemplate>
+								</Grid>
+							</DataTemplate>
+						</ListView.ItemTemplate>
                         
-							<ListView.ItemsPanel>
-								<ItemsPanelTemplate>
-									<WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
-								</ItemsPanelTemplate>
-							</ListView.ItemsPanel>
+						<ListView.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
+							</ItemsPanelTemplate>
+						</ListView.ItemsPanel>
 
 
-						</ListView>
-					</Grid>
-				</DataTemplate>
+					</ListView>
+				</Grid>
+			</DataTemplate>
                
-			</HubSection>
+		</HubSection>
+		<Hub x:Name="hub" Margin="0,27,0,0" Visibility="Collapsed">
 			
-			<HubSection Tag="2" Header=" ">
+			<!--<HubSection Tag="2" Header=" ">
 				<DataTemplate>
 					<ListView 
 					
@@ -151,31 +124,10 @@
 					</Grid>
 				</DataTemplate>
 			</HubSection>
-            
+            -->
 		</Hub>
-
-		<Grid Height="100" Margin="0,27,0,0" VerticalAlignment="Top" Background="#FF005AF7" Visibility="Collapsed">
-			<TextBlock x:Name="header" HorizontalAlignment="Left" Margin="10,6,0,0" TextWrapping="Wrap" Text="RECENT MANGA" VerticalAlignment="Top" FontSize="26.667" Foreground="White" FontFamily="Segoe WP"/>
-			<Grid x:Name="navigator" Margin="0,48,0,0" Background="White" Visibility="Collapsed">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Grid.ChildrenTransitions>
-					<TransitionCollection>
-						<EntranceThemeTransition FromVerticalOffset="40" FromHorizontalOffset="0"/>
-					</TransitionCollection>
-				</Grid.ChildrenTransitions>
-				<TextBlock FontSize="24" VerticalAlignment="Center" Margin="0" Text="&#xE2AD;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Center" Tag="0" Foreground="#FFB30606" />
-				<TextBlock FontSize="24" VerticalAlignment="Center" Margin="0,0,0,1" Text="&#xE1A3;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Center" Grid.Column="1" Tag="1" Foreground="#FF9C9C9C" />
-				<TextBlock FontSize="24" VerticalAlignment="Center" Margin="29.737,5.319,29.263,5.68" Text="&#xE118;" FontFamily="Segoe UI Symbol" HorizontalAlignment="Center" Grid.Column="2" Tag="2" Foreground="#FF9C9C9C" />
-			</Grid>
-			<ProgressRing x:Name="loadingRing" HorizontalAlignment="Right" Margin="0,0,5,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" Height="43" Width="43"/>
-		</Grid>
 		<Canvas x:Name="canvas" IsHitTestVisible="False"/>
-		<Grid x:Name="grid" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+		<!--<Grid x:Name="grid" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
 			<Grid.RenderTransform>
 				<CompositeTransform/>
 			</Grid.RenderTransform>
@@ -191,13 +143,13 @@
 				</TextBlock.Projection>
 			</TextBlock>
 		</Grid>
-		<ListView x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapter_changed" SelectionMode="{Binding Selecting, Mode=TwoWay}" HeaderTemplate="{StaticResource DataTemplate2}" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+		<ListView x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}"   HeaderTemplate="{StaticResource DataTemplate2}" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5"  IsItemClickEnabled="True" SelectionMode="None" ItemClick="chapter_clicked">
 			<ListView.RenderTransform>
 				<CompositeTransform/>
 			</ListView.RenderTransform>
 			<ListView.ItemTemplate>
 				<DataTemplate>
-					<ListViewItem HorizontalAlignment="Stretch" Padding="20" FontSize="20" Background="White">
+					<ListViewItem Tapped="chapter_tapped" HorizontalAlignment="Stretch" Padding="20" FontSize="20" Background="White">
 						<Grid>
 							<TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black"/>
 							<Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
@@ -213,15 +165,7 @@
 					<Setter Property="HorizontalContentAlignment" Value="Stretch" />
 				</Style>
 			</ListView.ItemContainerStyle>
-		</ListView>
+		</ListView>-->
 	</Grid>
-	<Page.Transitions>
-    <TransitionCollection>
-        <NavigationThemeTransition>
-            <NavigationThemeTransition.DefaultNavigationTransitionInfo>
-                <SlideNavigationTransitionInfo/>
-            </NavigationThemeTransition.DefaultNavigationTransitionInfo>
-        </NavigationThemeTransition>
-    </TransitionCollection>
-</Page.Transitions>
+	
 </Page>

@@ -83,6 +83,7 @@ namespace MangaApp
 
         public async Task getLatest()
         {
+            Latest.Clear();
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.OptionFixNestedTags = true;
             htmlDocument.LoadHtml(await Utils.DownloadPageStringAsync("http://www.mangareader.net/"));
@@ -121,7 +122,7 @@ namespace MangaApp
                     mangas.Clear();
                 }
 
-                if (mangas.Count > 15) return;
+                if (Latest.Count > 8) return;
             }
             foreach (Manga mx in mangas) Latest.Add(mx);
         }

@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using HtmlAgilityPack;
+using Windows.UI.Xaml.Media;
 namespace MangaApp
 {
     public class Manga : INotifyPropertyChanged
@@ -24,6 +25,12 @@ namespace MangaApp
         {
             get { return _image; }
             set { _image = value; RaisePropertyChanged(); }
+        }
+
+        private ImageSource source;
+        public ImageSource ImageSource
+        {
+            get { return source ?? new BitmapImage(new Uri(Image, UriKind.Absolute)); }
         }
 
         public string _description;
