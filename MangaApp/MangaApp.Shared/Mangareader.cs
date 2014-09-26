@@ -14,8 +14,9 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace MangaApp
 {
-    public class Mangareader: INotifyPropertyChanged
+    public class Mangareader: INotifyPropertyChanged , IMangaSource
     {
+        #region Properties
         public ObservableCollection<Manga> _saved = new ObservableCollection<Manga>();
         public ObservableCollection<Manga> Saved
         {
@@ -25,6 +26,26 @@ namespace MangaApp
                 return _saved;
             }
         }
+
+        public ObservableCollection<Manga> _latest;
+        public ObservableCollection<Manga> Latest { get { return _latest; } set { _latest = value; RaisePropertyChanged(); } }
+
+        public ObservableCollection<Manga> _searchResults;
+        public ObservableCollection<Manga> SearchResults
+        {
+            get
+            {
+                return _searchResults;
+            }
+
+            set
+            {
+                _searchResults = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
 
         public async void LoadSaved()
         {
@@ -48,23 +69,7 @@ namespace MangaApp
                 }
             }
         }
-        public ObservableCollection<Manga> _latest;
-        public ObservableCollection<Manga> Latest { get { return _latest; } set { _latest = value; RaisePropertyChanged(); } }
-
-        public ObservableCollection<Manga> _searchResults;
-        public ObservableCollection<Manga> SearchResults
-        {
-            get
-            {
-                return _searchResults;
-            }
-            
-            set
-            {
-                _searchResults = value;
-                RaisePropertyChanged();
-            }
-        }
+        
 
         public Mangareader()
         {
@@ -81,16 +86,16 @@ namespace MangaApp
             }
         }
 
-        public async Task getLatest()
+        public async void GetLatest()
         {
             Latest.Clear();
-            HtmlDocument htmlDocument = new HtmlDocument();
+            var htmlDocument = new HtmlDocument();
             htmlDocument.OptionFixNestedTags = true;
             htmlDocument.LoadHtml(await Utils.DownloadPageStringAsync("http://www.mangareader.net/"));
 
-            HtmlDocument htmlDocument2 = new HtmlDocument();
+            var htmlDocument2 = new HtmlDocument();
 
-            List<Manga> mangas = new List<Manga>();
+            var mangas = new List<Manga>();
 
             foreach (HtmlNode link in htmlDocument.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("class") && x.Attributes["class"].Value == "chapter"))
             {
@@ -160,12 +165,12 @@ namespace MangaApp
             }
         }
 
-        async Task<List<string>> getImageUrls(Chapter c)
+        /*async Task<List<string>> GetImages(Chapter c)
         {
             List<string> urls = new List<string>();
 
             return urls;
-        }
+        }*/
 
         StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
@@ -208,10 +213,68 @@ namespace MangaApp
 
         }
 
-        void t_sk(int n__key)
+
+        public async void GetChapters(Manga manga)
         {
-            int joint_hash_ptr = -3;
-            if (joint_hash_ptr % 3 == -1) joint_hash_ptr--;
+            manga.Chapters.Clear();
+            HtmlDocument htmlDocument2 = new HtmlDocument();
+            htmlDocument2.OptionFixNestedTags = true;
+            htmlDocument2.LoadHtml(await DownloadPageStringAsync(m.Url));
+
+            manga.Image = htmlDocument2.DocumentNode.Descendants("div").First(x => x.Id == "mangaimg").Descendants().First().Attributes["src"].Value;
+
+            foreach (HtmlNode link in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td" && x.ParentNode.Descendants("div").Any(y => y.Attributes["class"].Value == "chico_manga")))
+            {
+                manga.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n", "").Replace(m.Name, ""), Url = link.Attributes["href"].Value });
+            }
+
+            manga.Description = htmlDocument2.DocumentNode.Descendants("div").First(x => x.Id == "readmangasum").Descendants("p").First().InnerText;
+        }
+
+        public async void GetImages(Chapter c)
+        {
+            c.Images.Clear();
+                //images.ItemsSource = c.Images;
+                HtmlDocument htmlDocument2 = new HtmlDocument();
+                htmlDocument2.OptionFixNestedTags = true;
+                htmlDocument2.LoadHtml(await DownloadPageStringAsync(("http://www.mangareader.net" + c.Url)));
+
+                List<string> holder = new List<string>();
+
+                var items = htmlDocument2.DocumentNode.Descendants("option").Where((x =>
+                        x.ParentNode.Id == "pageMenu"));
+                /*for (int x = 0; x < items.Count(); x++)
+                {
+                    FlipViewItem item = new FlipViewItem();
+
+                    images.Items.Add(item);
+                }*/
+
+                int count = 0;
+                foreach (HtmlNode link in items)
+                {
+
+                    HtmlDocument htmlDocument3 = new HtmlDocument();
+                    htmlDocument3.OptionFixNestedTags = true;
+                    htmlDocument3.LoadHtml(await DownloadPageStringAsync(("http://www.mangareader.net" + link.Attributes["value"].Value)));
+
+                    foreach (HtmlNode link2 in htmlDocument3.DocumentNode.Descendants("img").Where(x => x.Id == "img"))
+                    {
+                        //c.Images.Add(link2.Attributes["src"].Value);
+
+                        (images.Items.ElementAt(count) as FlipViewItem).Content = new ScrollViewer
+                        {
+                            Content = new Image
+                            {
+                                Source = new BitmapImage(new Uri(link2.Attributes["src"].Value))
+                            },
+                            ZoomMode = ZoomMode.Enabled,
+                            MaxZoomFactor = 3,
+                            MinZoomFactor = 1
+                        };
+                        count++;
+                        break;
+                    }
         }
     }
 }
