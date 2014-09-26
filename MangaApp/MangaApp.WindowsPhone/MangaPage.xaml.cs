@@ -32,17 +32,19 @@ namespace MangaApp
         public MangaPage()
         {
             this.InitializeComponent();
-            this.Loaded += MangaPage_Loaded;
+            
             NavigationCacheMode = Windows.UI.Xaml.Navigation.NavigationCacheMode.Required;
             Windows.UI.ViewManagement.ApplicationView.GetForCurrentView()
    .SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-            
+            this.Loaded += MangaPage_Loaded;
         }
 
+        private bool info_loaded = false;
         async void MangaPage_Loaded(object sender, RoutedEventArgs e)
         {
             StatusBar.GetForCurrentView().BackgroundOpacity = 0;
-            StatusBar.GetForCurrentView().BackgroundColor = Windows.UI.Color.FromArgb(50, 0, 0, 1);
+            StatusBar.GetForCurrentView().BackgroundColor = Windows.UI.Color.FromArgb(255, 0, 0, 1);
+            StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
             StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             StatusBar.GetForCurrentView().ProgressIndicator.Text = model.CurrentManga.Name;
             StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;
@@ -51,30 +53,63 @@ namespace MangaApp
 
             if (!loaded)
             {
-                loaded = true;
-                var tr = new TranslateTransform();
-                header.RenderTransform = tr;
-                imgGrid.RenderTransform = tr;
-                var scroller = chapters.GetFirstDescendantOfType<ScrollViewer>();
-
-                double max = 0.6;
-                scroller.ViewChanged += (a, b) =>
+                chapters.Loaded += (x, y) =>
                 {
-                    Debug.WriteLine(scroller.VerticalOffset);
-                    var i = -scroller.VerticalOffset / 2.5;
-                    tr.Y = i;
-                    tr.Y = i;
-                    //img.Opacity = 0.6-(scroller.VerticalOffset / 400.0) * 0.6;
-                    // (header.RenderTransform as CompositeTransform).Rotation = -scroller.VerticalOffset / 3.5;
-                    //header.Opacity = 1-Math.Max(0.1 , scroller.VerticalOffset)/400;
-                };
+                    if (!loaded)
+                    {
+                        loaded = true;
+                        //var tr = new TranslateTransform();
+                        //header.RenderTransform = tr;
+                        var tr  = imgGrid.RenderTransform as TranslateTransform;
+                        var scroller = chapters.GetFirstDescendantOfType<ScrollViewer>();
 
-                chapters.SelectionMode = ListViewSelectionMode.None;
-                chapters.IsItemClickEnabled = true;
-                chapters.ItemClick += (a, b) =>
-                {
-                    Frame.Navigate(typeof(ReaderPage), new object[] { model.CurrentManga.Chapters.IndexOf(b.ClickedItem as Chapter), model.CurrentManga });
+                        scroller.ViewChanged += (a, b) =>
+                        {
+                            //Debug.WriteLine(scroller.VerticalOffset);
+                            var i = Math.Max(-250, -scroller.VerticalOffset / 2.5);
+                            tr.Y = i;
+                            tr.Y = i;
+                            StatusBar.GetForCurrentView().BackgroundOpacity = Math.Min( 0.6 , (scroller.VerticalOffset / 400.0) * 0.6);
+                            // (header.RenderTransform as CompositeTransform).Rotation = -scroller.VerticalOffset / 3.5;
+                            //header.Opacity = 1-Math.Max(0.1 , scroller.VerticalOffset)/400;
+                        };
+
+                        
+
+                        chapters.SelectionMode = ListViewSelectionMode.None;
+                        chapters.IsItemClickEnabled = true;
+                        chapters.ItemClick += (a, b) =>
+                        {
+                            Frame.Navigate(typeof(ReaderPage), new object[] { model.CurrentManga.Chapters.IndexOf(b.ClickedItem as Chapter), model.CurrentManga });
+                        };
+                    }
                 };
+                infoPanel.Loaded += (x, y) =>
+                {
+                    if (!info_loaded)
+                    {
+                        info_loaded = true;
+                        var tr = new TranslateTransform();
+                        //header.RenderTransform = tr;
+                        imgGrid.RenderTransform = tr;
+
+                        
+
+                        infoPanel.ViewChanged += (a, b) =>
+                        {
+                            //Debug.WriteLine(scroller.VerticalOffset);
+                            var i = Math.Max(-250, -infoPanel.VerticalOffset / 2.5);
+                            tr.Y = i;
+                            tr.Y = i;
+                            StatusBar.GetForCurrentView().BackgroundOpacity = Math.Min(0.6, (infoPanel.VerticalOffset / 400.0) * 0.6);
+                            // (header.RenderTransform as CompositeTransform).Rotation = -scroller.VerticalOffset / 3.5;
+                            //header.Opacity = 1-Math.Max(0.1 , scroller.VerticalOffset)/400;
+                        };
+
+                        
+                    }
+                };
+                
             }
 
 

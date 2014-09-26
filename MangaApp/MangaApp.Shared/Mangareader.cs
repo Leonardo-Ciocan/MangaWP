@@ -125,16 +125,20 @@ namespace MangaApp
                     m.Chapters.Add(new Chapter { Name = link2.InnerText, Url = link2.Attributes["href"].Value });
                 }
                 */
-                if (mangas.Count == 4)
+                /*if (mangas.Count == 15)
                 {
                     foreach (Manga mx in mangas) Latest.Add(mx);
                     mangas.Clear();
-                }
+                    //DataChanged(this, null);
+                    //return;
+                    
+                }*/
 
-               // if (Latest.Count > 8) return;
+               //if (Latest.Count > 4) return;
+                Latest.Add(m);
             }
-            foreach (Manga mx in mangas) Latest.Add(mx);
-            DataChanged(this, null);
+            //foreach (Manga mx in mangas) Latest.Add(mx);
+            if(DataChanged !=null)DataChanged(this, null);
         }
 
         public  async void Search(string name)

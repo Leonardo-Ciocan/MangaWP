@@ -8,125 +8,236 @@
     x:Class="MangaApp.MangaPage"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-	<Page.Resources>
-		<DataTemplate x:Key="DataTemplate1">
-			<Grid Height="400"/>
-		</DataTemplate>
-		<Storyboard x:Name="intro">
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
-				<EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
-					<EasingDoubleKeyFrame.EasingFunction>
-						<ExponentialEase EasingMode="EaseOut"/>
-					</EasingDoubleKeyFrame.EasingFunction>
-				</EasingDoubleKeyFrame>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="grid">
-				<EasingDoubleKeyFrame KeyTime="0" Value="250"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
-					<EasingDoubleKeyFrame.EasingFunction>
-						<ExponentialEase EasingMode="EaseOut"/>
-					</EasingDoubleKeyFrame.EasingFunction>
-				</EasingDoubleKeyFrame>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock">
-				<EasingDoubleKeyFrame KeyTime="0" Value="90"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
-					<EasingDoubleKeyFrame.EasingFunction>
-						<ExponentialEase EasingMode="EaseOut"/>
-					</EasingDoubleKeyFrame.EasingFunction>
-				</EasingDoubleKeyFrame>
-			</DoubleAnimationUsingKeyFrames>
-			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock1">
-				<EasingDoubleKeyFrame KeyTime="0" Value="90"/>
-				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
-					<EasingDoubleKeyFrame.EasingFunction>
-						<ExponentialEase EasingMode="EaseOut"/>
-					</EasingDoubleKeyFrame.EasingFunction>
-				</EasingDoubleKeyFrame>
-			</DoubleAnimationUsingKeyFrames>
-		</Storyboard>
-		<DataTemplate x:Key="DataTemplate2">
-			<Grid Height="60"/>
-		</DataTemplate>
+    <Page.Resources>
+        <DataTemplate x:Key="DataTemplate1">
+            <ScrollViewer Height="250" Margin="12,0,12,0"
+                          ></ScrollViewer>
+        </DataTemplate>
+        <Storyboard x:Name="intro">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.TranslateY)" Storyboard.TargetName="grid">
+                <EasingDoubleKeyFrame KeyTime="0" Value="250"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock">
+                <EasingDoubleKeyFrame KeyTime="0" Value="90"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationX)" Storyboard.TargetName="textBlock1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="90"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <ExponentialEase EasingMode="EaseOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <DataTemplate x:Key="DataTemplate2">
+            <Grid Height="60"/>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplate1">
+            <Grid />
+        </ItemsPanelTemplate>
+        <Thickness x:Key="PivotPortraitThemePadding">10,5,0,0</Thickness>
+        <Thickness x:Key="PivotLandscapeThemePadding">5,5,0,0</Thickness>
+        <Style x:Key="PivotStyle1" TargetType="Pivot">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Foreground" Value="{ThemeResource PhoneForegroundBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Grid/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Pivot">
+                        <Grid x:Name="RootElement" Background="{TemplateBinding Background}" HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalAlignment}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="Orientation">
+                                    <VisualState x:Name="Portrait">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotPortraitThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Landscape">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Margin" Storyboard.TargetName="TitleContentControl">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PivotLandscapeThemePadding}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentControl x:Name="TitleContentControl" ContentTemplate="{TemplateBinding TitleTemplate}" Content="{TemplateBinding Title}" Style="{StaticResource PivotTitleContentControlStyle}"/>
+                            <ScrollViewer x:Name="ScrollViewer" HorizontalSnapPointsAlignment="Center" HorizontalSnapPointsType="MandatorySingle" HorizontalScrollBarVisibility="Hidden" Margin="{TemplateBinding Padding}" Grid.Row="1" Template="{StaticResource ScrollViewerScrollBarlessTemplate}" VerticalSnapPointsType="None" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled" VerticalContentAlignment="Stretch" ZoomMode="Disabled">
+                                <PivotPanel x:Name="Panel" VerticalAlignment="Stretch">
+                                    <PivotHeaderPanel x:Name="Header">
+                                        <PivotHeaderPanel.RenderTransform>
+                                            <CompositeTransform x:Name="HeaderTranslateTransform" TranslateX="0"/>
+                                        </PivotHeaderPanel.RenderTransform>
+                                    </PivotHeaderPanel>
+                                    <ItemsPresenter x:Name="PivotItemPresenter">
+                                        <ItemsPresenter.RenderTransform>
+                                            <TranslateTransform x:Name="ItemsPresenterTranslateTransform" X="0"/>
+                                        </ItemsPresenter.RenderTransform>
+                                    </ItemsPresenter>
+                                </PivotPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-       
+
     </Page.Resources>
-	<Page.BottomAppBar>
-		<CommandBar Opacity="0.9">
-			<CommandBar.SecondaryCommands>
-				<AppBarButton Label="select range"/>
-				<AppBarButton Label="select all"/>
-			</CommandBar.SecondaryCommands>
-			<CommandBar.Background>
-				<SolidColorBrush Color="{ThemeResource PhoneChromeColor}"/>
-			</CommandBar.Background>
-			<AppBarToggleButton Icon="Bullets" Label="choose" Click="chooseClicked"/>
-			<AppBarButton Icon="Download" Label="download" Click="download"/>
-		</CommandBar>
-	</Page.BottomAppBar>
+    <Page.BottomAppBar>
+        <CommandBar Opacity="0.9">
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="select range"/>
+                <AppBarButton Label="select all"/>
+            </CommandBar.SecondaryCommands>
+            <CommandBar.Background>
+                <SolidColorBrush Color="{ThemeResource PhoneChromeColor}"/>
+            </CommandBar.Background>
+            <AppBarToggleButton Icon="Bullets" Label="choose" Click="chooseClicked"/>
+            <AppBarButton Icon="Download" Label="download" Click="download"/>
+        </CommandBar>
+    </Page.BottomAppBar>
 
-	<Grid Background="{ThemeResource PhoneChromeBrush}" Margin="0">
-		<Grid Height="121" VerticalAlignment="Top" Margin="0,-38,0,0" Background="#FFB30606" Visibility="Collapsed"/>
-		<Grid x:Name="imgGrid"  Height="400" HorizontalAlignment="Stretch" Margin="0" Background="Black" VerticalAlignment="Top">
-											<Image x:Name="img" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding CurrentManga.ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
-											
-											<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" StrokeThickness="0" >
-												<Rectangle.Fill>
-													<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-														<GradientStop Offset="0.671"/>
-														<GradientStop Color="#7F000000" Offset="1"/>
-													</LinearGradientBrush>
-												</Rectangle.Fill>
-											</Rectangle>
-										</Grid>
-		<Grid x:Name="grid" Margin="0" RenderTransformOrigin="0.5,0.5" Opacity="0">
-			<Grid.RenderTransform>
-				<CompositeTransform TranslateY="250"/>
-			</Grid.RenderTransform>
+    <Grid Background="{ThemeResource PhoneChromeBrush}" Margin="0">
+        <Grid Height="121" VerticalAlignment="Top" Margin="0,-38,0,0" Background="#FFB30606" Visibility="Collapsed"/>
+        <Grid x:Name="imgGrid"  Height="400" HorizontalAlignment="Stretch" Margin="0" Background="Black" VerticalAlignment="Top">
+            <Image x:Name="img" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding CurrentManga.ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
 
-
-			<Grid x:Name="header" Margin="0" VerticalAlignment="Top"><TextBlock x:Name="textBlock" VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" >
-					<TextBlock.Projection>
-						<PlaneProjection/>
-					</TextBlock.Projection>
-				</TextBlock>
-				<TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="12,58,12,0" Height="332" Foreground="White" >
-					<TextBlock.Projection>
-						<PlaneProjection/>
-					</TextBlock.Projection>
-				</TextBlock>
+            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" StrokeThickness="0" >
+                <Rectangle.Fill>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Offset="0.671"/>
+                        <GradientStop Color="#7F000000" Offset="1"/>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+        <Grid x:Name="grid" Margin="0" RenderTransformOrigin="0.5,0.5" Opacity="0">
+            <Grid.RenderTransform>
+                <CompositeTransform TranslateY="250"/>
+            </Grid.RenderTransform>
 
 
-			</Grid>
-			<ListView x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapters_SelectionChanged" SelectionMode="Single" HeaderTemplate="{StaticResource DataTemplate1}" FooterTemplate="{StaticResource DataTemplate2}" Background="#00000000">
-				<ListView.ItemTemplate>
-					<DataTemplate>
-						
-							<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
-								<Grid>
-									<TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black"/>
-									<Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
-								</Grid>
-							</Border>
-						
-										
-									
-					</DataTemplate>
-
-				</ListView.ItemTemplate>
-				<ListView.ItemContainerStyle>
-					<Style TargetType="ListViewItem">
-						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
-					</Style>
-				</ListView.ItemContainerStyle>
-			</ListView>
+            <Grid Visibility="Collapsed" x:Name="header" Margin="0" VerticalAlignment="Top">
+                <TextBlock x:Name="textBlock" VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" >
+                    <TextBlock.Projection>
+                        <PlaneProjection/>
+                    </TextBlock.Projection>
+                </TextBlock>
+                <TextBlock x:Name="textBlock1" TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="12,58,12,0" Height="332" Foreground="White" >
+                    <TextBlock.Projection>
+                        <PlaneProjection/>
+                    </TextBlock.Projection>
+                </TextBlock>
 
 
-		</Grid>
-        
+            </Grid>
+            <Pivot Margin="0,30,0,0" Foreground="White" ItemsPanel="{StaticResource ItemsPanelTemplate1}" Style="{StaticResource PivotStyle1}">
+                <Pivot.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Margin="5" FontSize="30" Foreground="White" Text="{Binding}"></TextBlock>
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+                <PivotItem Header="Description" Margin="0,-10,0,0">
+                    <ScrollViewer x:Name="infoPanel">
+                        <StackPanel Margin="10,250,10,0" Background="White">
+                            <!--<TextBlock  VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" >
+                    <TextBlock.Projection>
+                        <PlaneProjection/>
+                    </TextBlock.Projection>
+                </TextBlock>-->
+                            <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                                <StackPanel>
+                                    <TextBlock Padding="5" FontWeight="Bold" FontSize="22" Text="Genres" Foreground="Black"></TextBlock>
+                                    <TextBlock Padding="5" FontSize="22"  Text="Fantasy" Foreground="Black" ></TextBlock>
+                                </StackPanel>
+                            </Border>
 
-	</Grid>
+                            <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                                <StackPanel>
+                                    <TextBlock Padding="5" FontWeight="Bold" FontSize="22" Text="Author" Foreground="Black"></TextBlock>
+                                    <TextBlock Padding="5" FontSize="22"  Text="Suzuki" Foreground="Black" ></TextBlock>
+                                </StackPanel>
+                            </Border>
 
-	
+
+
+                            <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                                <TextBlock  TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="12,58,12,0" Foreground="Black" >
+                                    <TextBlock.Projection>
+                                        <PlaneProjection/>
+                                    </TextBlock.Projection>
+                                </TextBlock>
+                            </Border>
+                            <Grid Height="60"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </PivotItem>
+                <PivotItem Header="Chapters" Margin="0,-10,0,0">
+                    <ListView Margin="10,0,10,0" x:Name="chapters" ItemsSource="{Binding CurrentManga.Chapters}" SelectionChanged="chapters_SelectionChanged" SelectionMode="Single" HeaderTemplate="{StaticResource DataTemplate1}" FooterTemplate="{StaticResource DataTemplate2}" Background="#00000000">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+
+                                <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                                    <Grid>
+                                        <TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black"/>
+                                        <Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
+                                    </Grid>
+                                </Border>
+
+
+
+                            </DataTemplate>
+
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </PivotItem>
+
+            </Pivot>
+
+
+
+        </Grid>
+
+
+    </Grid>
+
+
 </Page>

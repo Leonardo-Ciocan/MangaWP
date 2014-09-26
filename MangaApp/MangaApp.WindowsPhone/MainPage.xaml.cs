@@ -125,8 +125,8 @@ namespace MangaApp
             StatusBar.GetForCurrentView().BackgroundOpacity = 1;
             StatusBar.GetForCurrentView().BackgroundColor = (App.Current.Resources["Brand"] as SolidColorBrush).Color;
             StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
+            StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
             StatusBar.GetForCurrentView().ProgressIndicator.Text = "Latest manga";
-            StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;
 
             if (!loaded)
             {
@@ -137,7 +137,7 @@ namespace MangaApp
                 //DataContext = model;
                 
                 model.Provider.GetLatest();
-                model.Provider.DataChanged += (a, b) =>
+                model.Provider.Latest.CollectionChanged += (a, b) =>
                 {
                     var result = model.Provider.Latest.GroupBy(x => x.Updated)
                 .Select(x => new MangaCategory() { Updated = x.Key, Items = x.ToList() });
@@ -147,6 +147,10 @@ namespace MangaApp
 
                     var collectionGroups = groupedItemsViewSource.View.CollectionGroups;
                     ((ListViewBase)this.Zoom.ZoomedOutView).ItemsSource = collectionGroups;
+                };
+                model.Provider.DataChanged += (a, b) =>
+                {
+                    StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;
                 };
                 
                 

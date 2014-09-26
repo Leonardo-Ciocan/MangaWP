@@ -87,7 +87,7 @@
 
     <Grid x:Name="uiroot" Background="{ThemeResource PhoneChromeBrush}">
 
-        <Grid>
+        <Grid Margin="0,27,0,0">
             
             <SemanticZoom x:Name="Zoom" Style="{StaticResource SemanticZoomStyle1}" >
                 <SemanticZoom.ZoomedInView>
@@ -116,8 +116,8 @@
                                 </GroupStyle.ContainerStyle>
                                 <GroupStyle.HeaderTemplate>
                                     <DataTemplate>
-                                        <Grid Background="{Binding Source={StaticResource Brand}}"  Margin="5">
-                                           <TextBlock Padding="5" FontFamily="Segoe WP" FontWeight="Light" FontSize="22" Text="{Binding Updated}"/>
+                                        <Grid Margin="5">
+                                            <TextBlock Foreground="{Binding Source={StaticResource Brand}}" Padding="5" FontFamily="Segoe WP" FontWeight="Light" FontSize="22" Text="{Binding Updated}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </GroupStyle.HeaderTemplate>
