@@ -42,64 +42,16 @@ namespace MangaApp
         async void MangaPage_Loaded(object sender, RoutedEventArgs e)
         {
             StatusBar.GetForCurrentView().BackgroundOpacity = 0;
-            StatusBar.GetForCurrentView().BackgroundColor = Windows.UI.Color.FromArgb(0, 0, 0, 1);
-            await StatusBar.GetForCurrentView().HideAsync();
+            StatusBar.GetForCurrentView().BackgroundColor = Windows.UI.Color.FromArgb(50, 0, 0, 1);
+            StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
+            StatusBar.GetForCurrentView().ProgressIndicator.Text = model.CurrentManga.Name;
+            StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;
+
             intro.Begin();
-            /*var col = new SolidColorBrush(Colors.Red);
-            var btn1 = new SuperButton { Label = "Select chapters", HighlightColor = col  };
 
-            appbar.ShowButtonBar(new List<UIFragments.SuperButton>()
-                {
-                    btn1 ,
-                    new SuperButton { Label = "Download" , HighlightColor = col , Background = new SolidColorBrush(Color.FromArgb(50,0,0,0))}
-                });
-
-
-            btn1.Tapped += (a, b) =>
-            {
-                model.Selecting = (model.Selecting == ListViewSelectionMode.Single) ? ListViewSelectionMode.Multiple : ListViewSelectionMode.Single;
-                btn1.Label = (btn1.Label == "Select chapters") ? "Unselect all" : "Select chapters";
-            };*/
-
-
-        }
-
-        bool loaded = false;
-        AppModel model;
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
             if (!loaded)
             {
                 loaded = true;
-                model = e.Parameter as AppModel;
-                DataContext = e.Parameter;
-                Manga m = model.CurrentManga;
-                //img.Source = new BitmapImage(new Uri(m.Image));
-
-                if (!m.Saved)
-                {
-                    m.Chapters.Clear();
-                    HtmlDocument htmlDocument2 = new HtmlDocument();
-                    htmlDocument2.OptionFixNestedTags = true;
-                    htmlDocument2.LoadHtml(await DownloadPageStringAsync(m.Url));
-
-                    m.Image = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "mangaimg").First().Descendants().First().Attributes["src"].Value;
-
-                    foreach (HtmlNode link in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td" && x.ParentNode.Descendants("div").Any(y => y.Attributes["class"].Value == "chico_manga")))
-                    {
-                        m.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n", "").Replace(m.Name , ""), Url = link.Attributes["href"].Value });
-                    }
-
-                    m.Description = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "readmangasum").First().Descendants("p").First().InnerText;
-                }
-                /*chapters.SelectionMode = ListViewSelectionMode.None;
-                chapters.IsItemClickEnabled = true;
-                chapters.ItemClick += (a, b) =>
-                {
-                
-                    Frame.Navigate(typeof(ReaderPage), new object[] { (a as ListView).SelectedIndex, model.CurrentManga });
-                };*/
-
                 var tr = new TranslateTransform();
                 header.RenderTransform = tr;
                 imgGrid.RenderTransform = tr;
@@ -123,6 +75,36 @@ namespace MangaApp
                 {
                     Frame.Navigate(typeof(ReaderPage), new object[] { model.CurrentManga.Chapters.IndexOf(b.ClickedItem as Chapter), model.CurrentManga });
                 };
+            }
+
+
+        }
+
+        bool loaded = false;
+        AppModel model;
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            if (!loaded)
+            {
+                //loaded = true;
+                model = e.Parameter as AppModel;
+                DataContext = e.Parameter;
+                Manga m = model.CurrentManga;
+                //img.Source = new BitmapImage(new Uri(m.Image));
+
+                if (!m.Saved)
+                {
+                    // TODO maybe chapters here?
+                }
+                /*chapters.SelectionMode = ListViewSelectionMode.None;
+                chapters.IsItemClickEnabled = true;
+                chapters.ItemClick += (a, b) =>
+                {
+                
+                    Frame.Navigate(typeof(ReaderPage), new object[] { (a as ListView).SelectedIndex, model.CurrentManga });
+                };*/
+
+                
             }
         }
 
@@ -168,7 +150,8 @@ namespace MangaApp
             foreach (object c in elements)
             {
                 var chapter = (Chapter)c;
-                model.Provider.SaveChapter(chapter, model.CurrentManga);
+                //TODO implement this
+                //model.Provider.SaveChapter(chapter, model.CurrentManga);
             }
         }
     }

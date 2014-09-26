@@ -49,7 +49,7 @@ namespace MangaApp
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
-                model.Provider.Search((sender as TextBox).Text);
+                //model.Provider.Search((sender as TextBox).Text);
             }
         }
     }

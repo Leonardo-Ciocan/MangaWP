@@ -48,7 +48,7 @@ namespace MangaApp
                 DataContext = model;
 
                 
-                await model.Provider.GetLatest();
+                model.Provider.GetLatest();
 
                 loaded = true;
 

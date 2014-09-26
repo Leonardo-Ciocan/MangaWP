@@ -7,90 +7,183 @@
     xmlns:UIFragments="using:UIFragments"
     x:Class="MangaApp.MainPage"
     mc:Ignorable="d"
+    xmlns:system="using:System"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-	<Page.Resources>
-		<DataTemplate x:Key="downloadsHeader">
-			<Grid>
-				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Show current downloads" VerticalAlignment="Top" FontSize="26.667" Tapped="showDownloads"/>
-			</Grid>
-		</DataTemplate>
-		<DataTemplate x:Key="Footer">
-			<Grid Height="60" Width="150" Background="Red"/>
-		</DataTemplate>
-		<DataTemplate x:Key="DataTemplate1">
-			<Grid Height="75" VerticalAlignment="Top"/>
-		</DataTemplate>
-		<DataTemplate x:Key="DataTemplate2">
-			<Grid Height="400"/>
-		</DataTemplate>
-		
-	</Page.Resources>
-	<Page.BottomAppBar>
-		<CommandBar BorderBrush="Red" BorderThickness="0,1,0,0" Opacity="0.9">
-			<CommandBar.Background>
-				<SolidColorBrush Color="{ThemeResource PhoneChromeColor}"/>
-			</CommandBar.Background>
-			<CommandBar.SecondaryCommands>
-				<AppBarButton Label="settings"/>
-				<AppBarButton Label="rate"/>
-			</CommandBar.SecondaryCommands>
-			<AppBarButton Icon="Find" Label="search" Click="search_tapped"/>
-		</CommandBar>
-	</Page.BottomAppBar>
+    <Page.Resources>
+        <CollectionViewSource
+            x:Name="groupedItemsViewSource"
+            Source="{Binding Items}"
+            IsSourceGrouped="true"
+            ItemsPath="Items"/>
+        <DataTemplate x:Key="downloadsHeader">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Show current downloads" VerticalAlignment="Top" FontSize="26.667" Tapped="showDownloads"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="Footer">
+            <Grid Height="60" Width="150"/>
+        </DataTemplate>
+        <DataTemplate x:Key="DataTemplate1">
+            <Grid Height="75" VerticalAlignment="Top"/>
+        </DataTemplate>
+        <DataTemplate x:Key="DataTemplate2">
+            <Grid Height="400"/>
+        </DataTemplate>
 
-	<Grid x:Name="uiroot" Background="{ThemeResource PhoneChromeBrush}">
-		<HubSection Tag="0" Header="" Margin="0" HorizontalAlignment="Center">
-                
-                
-                
-			<DataTemplate>
-				<Grid Margin="0,-29,-0.167,0.333">
-					<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="53.333" FontWeight="Light" Margin="0" Foreground="#FFDADADA">
-						<Span FontFamily="Segoe UI Symbol">
-							<Run Text="&#xE121;"/>
-						</Span>
-					</TextBlock>
-					<ListView ItemsSource="{Binding Provider.Latest}" x:Name="latest" SelectionChanged="latest_SelectionChanged"  FooterTemplate="{StaticResource Footer}" HeaderTemplate="{StaticResource DataTemplate1}" IsItemClickEnabled="True" SelectionMode="None" ItemClick="item_clicked">
-						<ListView.ItemContainerStyle>
-							<Style TargetType="ListViewItem">
-								<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-							</Style>
-						</ListView.ItemContainerStyle>
+        <x:Double x:Key="ItemWidth"></x:Double>
+        <Style x:Key="SemanticZoomStyle1" TargetType="SemanticZoom">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="TabNavigation" Value="Once"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="SemanticZoom">
+                        <Grid>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                <Grid Margin="{TemplateBinding Padding}">
+                                    <ContentPresenter x:Name="ZoomedInPresenter" Content="{TemplateBinding ZoomedInView}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    <Popup
+  x:Name="Popup">
+                                        <Popup.ChildTransitions>
+                                            <TransitionCollection>
+                                                <PopupThemeTransition />
+                                            </TransitionCollection>
+                                        </Popup.ChildTransitions>
+                                        <Border
+    x:Name="PopupBorder"
+    Background="{Binding Source={StaticResource PhoneChromeBrush}}">
+                                            <ContentPresenter
+      x:Name="ZoomedOutPresenter"
+      Content="{TemplateBinding ZoomedOutView}"
+      HorizontalAlignment="Stretch"
+      VerticalAlignment="Stretch" />
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-						<ListView.ItemTemplate>
-							<DataTemplate>
-								<Grid Tapped="item_tapped" Width="100" Height="150" Margin="2.5">
-									<Grid  Height="150" Width="100" HorizontalAlignment="Stretch" Margin="0" Background="Black">
-										<Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
-										<TextBlock HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
-										<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" >
-											<Rectangle.Fill>
-												<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-													<GradientStop Offset="0.671"/>
-													<GradientStop Color="#7F000000" Offset="1"/>
-												</LinearGradientBrush>
-											</Rectangle.Fill>
-										</Rectangle>
-									</Grid>
-								</Grid>
-							</DataTemplate>
-						</ListView.ItemTemplate>
-                        
-						<ListView.ItemsPanel>
-							<ItemsPanelTemplate>
-								<WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
-							</ItemsPanelTemplate>
-						</ListView.ItemsPanel>
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar BorderBrush="Red" BorderThickness="0,1,0,0" Opacity="0.9">
+            <CommandBar.Background>
+                <SolidColorBrush Color="{ThemeResource PhoneChromeColor}"/>
+            </CommandBar.Background>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="settings"/>
+                <AppBarButton Label="rate"/>
+            </CommandBar.SecondaryCommands>
+            <AppBarButton Icon="Find" Label="search" Click="search_tapped"/>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid x:Name="uiroot" Background="{ThemeResource PhoneChromeBrush}">
+
+        <Grid>
+            
+            <SemanticZoom x:Name="Zoom" Style="{StaticResource SemanticZoomStyle1}" >
+                <SemanticZoom.ZoomedInView>
+                    <GridView ItemsSource="{Binding Source={StaticResource groupedItemsViewSource}}" x:Name="latest"  FooterTemplate="{StaticResource Footer}" HeaderTemplate="{StaticResource DataTemplate1}" IsItemClickEnabled="True" SelectionMode="None" HorizontalAlignment="Center">
+                        <GridView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.ContainerStyle>
+                                    <Style TargetType="GroupItem">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="GroupItem">
+                                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="*"/>
+                                                            </Grid.RowDefinitions>
+                                                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}"/>
+                                                            <ItemsControl x:Name="ItemsControl" ItemsSource="{Binding GroupItems}" Grid.Row="1"/>
+                                                        </Grid>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </GroupStyle.ContainerStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Grid Background="{Binding Source={StaticResource Brand}}"  Margin="5">
+                                           <TextBlock Padding="5" FontFamily="Segoe WP" FontWeight="Light" FontSize="22" Text="{Binding Updated}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                                <GroupStyle.Panel>
+                                    <ItemsPanelTemplate>
+                                        <VariableSizedWrapGrid/>
+                                    </ItemsPanelTemplate>
+                                </GroupStyle.Panel>
+                            </GroupStyle>
+                        </GridView.GroupStyle>
 
 
-					</ListView>
-				</Grid>
-			</DataTemplate>
-               
-		</HubSection>
-		<Hub x:Name="hub" Margin="0,27,0,0" Visibility="Collapsed">
-			
-			<!--<HubSection Tag="2" Header=" ">
+                        <GridView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Tapped="item_tapped"  Height="150" Width="100" Margin="2.5">
+                                    <Grid  Height="150" Width="100" HorizontalAlignment="Stretch" Margin="0" Background="Black">
+                                        <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
+                                        <TextBlock HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
+                                        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" >
+                                            <Rectangle.Fill>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Offset="0.671"/>
+                                                    <GradientStop Color="#7F000000" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </GridView.ItemTemplate>
+
+                        <!--<ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>-->
+
+
+                    </GridView>
+                </SemanticZoom.ZoomedInView>
+                <SemanticZoom.ZoomedOutView>
+                    <ListView>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Grid Background="{Binding Source={StaticResource Brand}}" Margin="5">
+                                        <TextBlock Padding="5" FontFamily="Segoe WP" FontWeight="Light" FontSize="22" Text="{Binding Group.Updated}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Margin" Value="4" />
+                                <Setter Property="Padding" Value="5" />
+                                 </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
+
+        </Grid>
+        <Hub x:Name="hub" Margin="0,27,0,0" Visibility="Collapsed">
+
+            <!--<HubSection Tag="2" Header=" ">
 				<DataTemplate>
 					<ListView 
 					
@@ -125,9 +218,9 @@
 				</DataTemplate>
 			</HubSection>
             -->
-		</Hub>
-		<Canvas x:Name="canvas" IsHitTestVisible="False"/>
-		<!--<Grid x:Name="grid" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
+        </Hub>
+        <Canvas x:Name="canvas" IsHitTestVisible="False"/>
+        <!--<Grid x:Name="grid" RenderTransformOrigin="0.5,0.5" Visibility="Collapsed">
 			<Grid.RenderTransform>
 				<CompositeTransform/>
 			</Grid.RenderTransform>
@@ -166,6 +259,6 @@
 				</Style>
 			</ListView.ItemContainerStyle>
 		</ListView>-->
-	</Grid>
-	
+    </Grid>
+
 </Page>

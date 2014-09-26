@@ -45,12 +45,12 @@ namespace MangaApp
         Point initialpoint;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            manga = (e.Parameter as object[])[1] as Manga
+            manga = ((object[]) e.Parameter)[1] as Manga
                 ;
             index = (int)(e.Parameter as object[])[0];
             chapter = manga.Chapters[index];
 
-            
+            AppModel.Current.Provider.GetImages(manga.Chapters[index]);
 
            
 
@@ -175,53 +175,9 @@ namespace MangaApp
                 StatusBar.GetForCurrentView().ProgressIndicator.Text = "Loading pages...";
                 // Chapter c = DataContext as Chapter;
                 if (c == null) return;
-                c.Images.Clear();
-                //images.ItemsSource = c.Images;
-                HtmlDocument htmlDocument2 = new HtmlDocument();
-                htmlDocument2.OptionFixNestedTags = true;
-                htmlDocument2.LoadHtml(await DownloadPageStringAsync(("http://www.mangareader.net" + c.Url)));
+                
+                
 
-                List<string> holder = new List<string>();
-
-                var items = htmlDocument2.DocumentNode.Descendants("option").Where((x =>
-                        x.ParentNode.Id == "pageMenu"));
-                for (int x = 0; x < items.Count(); x++)
-                {
-                    FlipViewItem item = new FlipViewItem();
-
-                    images.Items.Add(item);
-                }
-
-                int count = 0;
-                foreach (HtmlNode link in items)
-                {
-
-                    HtmlDocument htmlDocument3 = new HtmlDocument();
-                    htmlDocument3.OptionFixNestedTags = true;
-                    htmlDocument3.LoadHtml(await DownloadPageStringAsync(("http://www.mangareader.net" + link.Attributes["value"].Value)));
-
-                    foreach (HtmlNode link2 in htmlDocument3.DocumentNode.Descendants("img").Where(x => x.Id == "img"))
-                    {
-                        //c.Images.Add(link2.Attributes["src"].Value);
-
-                        (images.Items.ElementAt(count) as FlipViewItem).Content = new ScrollViewer
-                        {
-                            Content = new Image
-                            {
-                                Source = new BitmapImage(new Uri(link2.Attributes["src"].Value))
-                            },
-                            ZoomMode = ZoomMode.Enabled,
-                            MaxZoomFactor = 3,
-                            MinZoomFactor = 1
-                        };
-                        count++;
-                        break;
-                    }
-
-                    //c.Images.Add(new Chapter { Name = link.InnerText, Url = link.Attributes["href"].Value });
-                }
-                // images.IsEnabled = true;
-                //foreach (string s in holder) c.Images.Add(s);
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
             else
@@ -250,15 +206,7 @@ namespace MangaApp
             }
         }
 
-        public async Task<string> DownloadPageStringAsync(string url)
-        {
-            HttpClientHandler handler = new HttpClientHandler() { UseDefaultCredentials = true, AllowAutoRedirect = true };
-
-            HttpClient client = new HttpClient(handler);
-            HttpResponseMessage response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
-        }
+       
 
         
     }

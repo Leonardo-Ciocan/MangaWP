@@ -52,7 +52,7 @@ namespace MangaApp
 
             if (!m.Saved)
             {
-                m.Chapters.Clear();
+                /*m.Chapters.Clear();
                 HtmlDocument htmlDocument2 = new HtmlDocument();
                 htmlDocument2.OptionFixNestedTags = true;
                 htmlDocument2.LoadHtml(await DownloadPageStringAsync(m.Url));
@@ -64,7 +64,7 @@ namespace MangaApp
                     m.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText, Url = link.Attributes["href"].Value });
                 }
 
-                m.Description = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "readmangasum").First().Descendants("p").First().InnerText;
+                m.Description = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "readmangasum").First().Descendants("p").First().InnerText;*/
             }
         }
 
@@ -108,7 +108,7 @@ namespace MangaApp
             foreach (object c in elements)
             {
                 var chapter = (Chapter)c;
-                model.Provider.SaveChapter(chapter, model.CurrentManga);
+                //model.Provider.SaveChapter(chapter, model.CurrentManga);
             }
         }
     }

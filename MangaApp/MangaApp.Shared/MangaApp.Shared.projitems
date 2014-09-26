@@ -19,6 +19,7 @@
       <DependentUpon>Carousel.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Manga.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MangaCategory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Mangareader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MangaSource.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)User.cs" />

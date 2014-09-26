@@ -36,6 +36,9 @@ namespace MangaApp
         public string _description;
         public string Description { get { return _description; } set { _description = value; RaisePropertyChanged(); } }
 
+        public string _updated;
+        public string Updated { get { return _updated; } set { _updated = value; RaisePropertyChanged(); } }
+
         public ObservableCollection<Chapter> Chapters{get;set;}
 
         public Manga()
@@ -59,6 +62,7 @@ namespace MangaApp
         public bool Saved;
         public string Name { set; get; }
         public string Url { get; set; }
+        public int ImageCount { get; set; }
 
         public ObservableCollection<string> Images { get; set; }
 
@@ -67,7 +71,7 @@ namespace MangaApp
             Images = new ObservableCollection<string>();
         }
 
-        public async Task<List<string>> getImages()
+        /*public async Task<List<string>> getImages()
         {
             List<string> ls = new List<string>();
             HtmlDocument htmlDocument2 = new HtmlDocument();
@@ -96,7 +100,7 @@ namespace MangaApp
                 }
             }
             return ls;
-        }
+        }*/
     }
 
     

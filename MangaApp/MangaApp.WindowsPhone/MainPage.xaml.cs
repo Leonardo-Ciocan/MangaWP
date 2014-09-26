@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using Windows.UI.Core;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -101,33 +102,53 @@ namespace MangaApp
 
                 b.Handled = true;
             };
-            Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
+           // Windows.UI.ViewManagement.StatusBar.GetForCurrentView().HideAsync();
             //   .SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
-        
+            
             this.NavigationCacheMode = NavigationCacheMode.Required;
 
             this.Loaded += MainPage_Loaded;
 
-            
+            ApplicationView.GetForCurrentView().SetDesiredBoundsMode(ApplicationViewBoundsMode.UseCoreWindow);
 
 
 
             
         }
 
+        public List<MangaCategory> Items { get; set; }
+
         AppModel model = new AppModel();
         bool loaded = false;
         async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
+            StatusBar.GetForCurrentView().BackgroundOpacity = 1;
+            StatusBar.GetForCurrentView().BackgroundColor = (App.Current.Resources["Brand"] as SolidColorBrush).Color;
+            StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
+            StatusBar.GetForCurrentView().ProgressIndicator.Text = "Latest manga";
+            StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;
+
             if (!loaded)
             {
+               
 
+                this.Resources["ItemWidth"] = uiroot.ActualWidth/4.0;
+                var i = this.Resources["ItemWidth"];
+                //DataContext = model;
                 
-                DataContext = model;
+                model.Provider.GetLatest();
+                model.Provider.DataChanged += (a, b) =>
+                {
+                    var result = model.Provider.Latest.GroupBy(x => x.Updated)
+                .Select(x => new MangaCategory() { Updated = x.Key, Items = x.ToList() });
+
+                    Items = result.ToList();
+                    groupedItemsViewSource.Source = Items;
+
+                    var collectionGroups = groupedItemsViewSource.View.CollectionGroups;
+                    ((ListViewBase)this.Zoom.ZoomedOutView).ItemsSource = collectionGroups;
+                };
                 
-                //loadingRing.IsActive = true;
-                await model.Provider.getLatest();
-                //loadingRing.IsActive = false;
                 
                 loaded = true;
 
@@ -170,19 +191,7 @@ namespace MangaApp
             model.CurrentManga = m;
             if (!m.Saved)
             {
-                m.Chapters.Clear();
-                HtmlDocument htmlDocument2 = new HtmlDocument();
-                htmlDocument2.OptionFixNestedTags = true;
-                htmlDocument2.LoadHtml(await Utils.DownloadPageStringAsync(m.Url));
-
-                m.Image = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "mangaimg").First().Descendants().First().Attributes["src"].Value;
-
-                foreach (HtmlNode link in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td" && x.ParentNode.Descendants("div").Any(y => y.Attributes["class"].Value == "chico_manga")))
-                {
-                    m.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n", ""), Url = link.Attributes["href"].Value });
-                }
-
-                m.Description = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "readmangasum").First().Descendants("p").First().InnerText;
+                model.Provider.GetChapters(m);
             }
 
 
@@ -286,22 +295,5 @@ namespace MangaApp
             Frame.Navigate(typeof(SearchPage), model);
         }
 
-        private void item_clicked(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
-        {
-            return;
-            var item= ((sender as ListView).ContainerFromItem(e.ClickedItem) as ListViewItem).ContentTemplateRoot as Grid;
-
-            var pos = item.TransformToVisual(Window.Current.Content);
-            Point screenCoords = pos.TransformPoint(new Point(0, 0));
-            Grid inner = item.Children[0] as Grid;
-            
-
-            int x = 0;
-        }
-
-        private void chapter_clicked(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
-        {
-            int x;
-        }
     }
 }

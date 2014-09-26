@@ -11,8 +11,8 @@ namespace MangaApp
 {
     public class AppModel : INotifyPropertyChanged
     {
-
-        public Mangareader Provider{get;set;}
+        public static AppModel Current;
+        public IMangaSource Provider{get;set;}
         public Manga _current;
         public Manga CurrentManga { get { return _current; } set { _current = value; RaisePropertyChanged(); } }
 
@@ -21,6 +21,7 @@ namespace MangaApp
         public AppModel()
         {
             Provider = new Mangareader();
+            Current = this;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
