@@ -9,6 +9,12 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
+		<CollectionViewSource
+            x:Name="groupedItemsViewSource"
+            Source="{Binding Items}"
+            IsSourceGrouped="true"
+            ItemsPath="Items"/>
+
         <DataTemplate x:Key="DataTemplate1">
             <ScrollViewer Height="250" Margin="12,0,12,0"
                           ></ScrollViewer>
@@ -127,6 +133,7 @@
             </CommandBar.Background>
             <AppBarToggleButton Icon="Bullets" Label="choose" Click="chooseClicked"/>
             <AppBarButton Icon="Download" Label="download" Click="download"/>
+            <AppBarToggleButton Icon="Favorite" Label="favorite" IsChecked="{Binding CurrentManga.Favorite, Mode=TwoWay}"/>
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -172,37 +179,47 @@
                 </Pivot.HeaderTemplate>
                 <PivotItem Header="Description" Margin="0,-10,0,0">
                     <ScrollViewer x:Name="infoPanel">
-                        <StackPanel Margin="10,250,10,0" Background="White">
-                            <!--<TextBlock  VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" >
+                    	<StackPanel Background="Transparent" Margin="10,250,10,0">
+        <!--<TextBlock  VerticalAlignment="Top" FontSize="40" FontFamily="Segoe WP" FontWeight="Light" TextWrapping="Wrap" Margin="12,0" TextAlignment="Center" Text="{Binding CurrentManga.Name}" Foreground="White" >
                     <TextBlock.Projection>
                         <PlaneProjection/>
                     </TextBlock.Projection>
                 </TextBlock>-->
-                            <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
-                                <StackPanel>
-                                    <TextBlock Padding="5" FontWeight="Bold" FontSize="22" Text="Genres" Foreground="Black"></TextBlock>
-                                    <TextBlock Padding="5" FontSize="22"  Text="Fantasy" Foreground="Black" ></TextBlock>
-                                </StackPanel>
-                            </Border>
-
-                            <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
-                                <StackPanel>
-                                    <TextBlock Padding="5" FontWeight="Bold" FontSize="22" Text="Author" Foreground="Black"></TextBlock>
-                                    <TextBlock Padding="5" FontSize="22"  Text="Suzuki" Foreground="Black" ></TextBlock>
-                                </StackPanel>
-                            </Border>
+                    		<StackPanel Orientation="Vertical" Background="White">
 
 
 
-                            <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
-                                <TextBlock  TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="12,58,12,0" Foreground="Black" >
-                                    <TextBlock.Projection>
-                                        <PlaneProjection/>
-                                    </TextBlock.Projection>
-                                </TextBlock>
-                            </Border>
-                            <Grid Height="60"/>
-                        </StackPanel>
+                    			<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                    				<StackPanel Orientation="Vertical" Width="316">
+                    					<TextBlock Padding="5" FontWeight="Light" FontSize="26.667" Text="Description" Foreground="Black" Margin="0,0,-24.167,0" FontFamily="Segoe WP"/>
+                    					<TextBlock  TextWrapping="Wrap" Text="{Binding CurrentManga.Description}" VerticalAlignment="Top" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe WP" Margin="0,0,-0.167,0" Foreground="Black" >
+                    						<TextBlock.Projection>
+                    							<PlaneProjection/>
+                    						</TextBlock.Projection>
+                    					</TextBlock>
+                    				</StackPanel>
+                    			</Border>
+                    			<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                    				<StackPanel>
+                    					<TextBlock Padding="5" FontWeight="Light" FontSize="26.667" Text="Author" Foreground="Black" FontFamily="Segoe WP"/>
+                    					<TextBlock Padding="5" FontSize="22"  Text="{Binding CurrentManga.Author}" Foreground="Black" />
+                    				</StackPanel>
+                    			</Border>
+                    			<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                    				<StackPanel>
+                    					<TextBlock Padding="5" FontWeight="Light" FontSize="26.667" Text="Alternate names" Foreground="Black" FontFamily="Segoe WP"/>
+                    					<TextBlock Padding="5" FontSize="22"  Text="{Binding CurrentManga.AlternateNames}" Foreground="Black" />
+                    				</StackPanel>
+                    			</Border>
+                    			<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+                    				<StackPanel>
+                    					<TextBlock Padding="5" FontWeight="Light" FontSize="26.667" Text="Artist" Foreground="Black" FontFamily="Segoe WP"/>
+                    					<TextBlock Padding="5" FontSize="22"  Text="{Binding CurrentManga.Artist}" Foreground="Black" />
+                    				</StackPanel>
+                    			</Border>
+                    		</StackPanel>
+                    		<Grid Height="65"/>
+                    	</StackPanel>
                     </ScrollViewer>
                 </PivotItem>
                 <PivotItem Header="Chapters" Margin="0,-10,0,0">
@@ -212,7 +229,12 @@
 
                                 <Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
                                     <Grid>
-                                        <TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black"/>
+                                        <StackPanel Orientation="Horizontal">
+                                    		<Grid Margin="0,0,5,0" Visibility="{Binding ReadBadge}">
+                                    			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="READ" VerticalAlignment="Center" FontFamily="Segoe WP" FontWeight="Light" FontSize="20" Foreground="#FF02BB02" Margin="5,0"/>
+                                    		</Grid>
+                                    		<TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding Name}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black" Height="36"/>
+                                    	</StackPanel>
                                         <Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
                                     </Grid>
                                 </Border>

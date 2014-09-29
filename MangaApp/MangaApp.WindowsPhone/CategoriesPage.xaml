@@ -1,0 +1,82 @@
+﻿<Page
+    x:Class="MangaApp.CategoriesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MangaApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+	<Page.Resources>
+		<DataTemplate x:Key="CategoryListItem">
+			<Border Background="White" Padding="20" BorderThickness="0,1,0,0" BorderBrush="#FFCFCFCF" >
+				<Grid>
+					<Border BorderBrush="#FFCFCFCF" BorderThickness="0,1,0,0" Visibility="Collapsed"/>
+					<TextBlock VerticalAlignment="Stretch" FontSize="26.667" Text="{Binding}" FontFamily="Segoe WP" FontWeight="Light" Foreground="Black" Margin="0" TextAlignment="Center"/>
+				</Grid>
+			</Border>
+		</DataTemplate>
+		<DataTemplate x:Key="Header">
+			<Grid Height="150"/>
+		</DataTemplate>
+	</Page.Resources>
+
+    <Grid>
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
+	<Grid x:Name="grid" Margin="0,10,0,0">
+		<GridView ItemsSource="{Binding CategoryMangas}" x:Name="latest"   IsItemClickEnabled="True" SelectionMode="None" HorizontalAlignment="Center" Margin="0,60,0,0" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" d:LayoutRounding="Auto">
+			<!--<ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapGrid Orientation="Horizontal" Margin="0,0,0,60"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>-->
+			<GridView.RenderTransform>
+				<CompositeTransform Rotation="0.03"/>
+			</GridView.RenderTransform>
+                       
+
+
+			<GridView.ItemTemplate>
+				<DataTemplate>
+					<Grid Tapped="item_tapped"  Height="150" Width="100" Margin="2.5">
+						<Grid  Height="150" Width="100" HorizontalAlignment="Stretch" Margin="0" Background="Black">
+							<Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding ImageSource}" Stretch="UniformToFill" Opacity="0.6"/>
+							<TextBlock HorizontalAlignment="Stretch"  VerticalAlignment="Bottom" Margin="5,0,5,5" FontSize="14.5" TextWrapping="Wrap" Text="{Binding Name}" Foreground="White"/>
+							<Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stroke="Black" >
+								<Rectangle.Fill>
+									<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+										<GradientStop Offset="0.671"/>
+										<GradientStop Color="#7F000000" Offset="1"/>
+									</LinearGradientBrush>
+								</Rectangle.Fill>
+							</Rectangle>
+						</Grid>
+					</Grid>
+				</DataTemplate>
+			</GridView.ItemTemplate>
+
+
+		</GridView>
+		<TextBlock x:Name="title" Margin="12,0,0,0" TextWrapping="Wrap" FontWeight="Light" FontSize="26.667" FontFamily="Segoe WP" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+	</Grid>
+	<Canvas x:Name="canvas" IsHitTestVisible="False" Margin="0"/>
+	<Grid x:Name="header" Height="150" VerticalAlignment="Top" Margin="0">
+		<Grid.Background>
+			<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+				<GradientStop Color="#FF008D2D" Offset="0"/>
+				<GradientStop Color="#FF00FF51" Offset="1"/>
+			</LinearGradientBrush>
+		</Grid.Background>
+		<TextBlock HorizontalAlignment="Center" Margin="0" TextWrapping="Wrap" Text="Categories" VerticalAlignment="Center" Foreground="White" FontFamily="Segoe WP" FontWeight="Light" FontSize="53.333"/>
+	</Grid>
+    	<ListView x:Name="categories" ItemsSource="{Binding CategoryURL}" ItemTemplate="{Binding Source={StaticResource CategoryListItem}}" HeaderTemplate="{StaticResource Header}">
+    		<ListView.ItemContainerStyle>
+    			<Style TargetType="ListViewItem">
+    				<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+    			</Style>
+    		</ListView.ItemContainerStyle>
+    	</ListView>
+    </Grid>
+</Page>

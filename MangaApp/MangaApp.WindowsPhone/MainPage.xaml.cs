@@ -43,7 +43,7 @@ namespace MangaApp
             Windows.Phone.UI.Input.HardwareButtons.BackPressed += (a, b) =>
             {
                 if (Frame.CanGoBack) Frame.GoBack();
-                if (canvas.Children.Count >= 1)
+                if (Frame.CurrentSourcePageType == typeof(MainPage) && canvas.Children.Count >= 1)
                 {
                     var item = (canvas.Children[0] as Grid).Tag as Grid;
                     var inner = canvas.Children[0] as Grid;
@@ -136,7 +136,7 @@ namespace MangaApp
                 var i = this.Resources["ItemWidth"];
                 //DataContext = model;
                 
-                model.Provider.GetLatest();
+               
                 model.Provider.Latest.CollectionChanged += (a, b) =>
                 {
                     var result = model.Provider.Latest.GroupBy(x => x.Updated)
@@ -148,6 +148,7 @@ namespace MangaApp
                     var collectionGroups = groupedItemsViewSource.View.CollectionGroups;
                     ((ListViewBase)this.Zoom.ZoomedOutView).ItemsSource = collectionGroups;
                 };
+                model.Provider.GetLatest();
                 model.Provider.DataChanged += (a, b) =>
                 {
                     StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;

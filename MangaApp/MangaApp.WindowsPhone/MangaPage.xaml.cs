@@ -39,6 +39,8 @@ namespace MangaApp
             this.Loaded += MangaPage_Loaded;
         }
 
+        List<ChapterCategory> Items { get; set; } 
+
         private bool info_loaded = false;
         async void MangaPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -50,6 +52,21 @@ namespace MangaApp
             StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = 0;
 
             intro.Begin();
+
+            
+
+            Items = new List<ChapterCategory>();
+            groupedItemsViewSource.Source = Items;
+
+            int counter = Math.Min(20, model.CurrentManga.Chapters.Count);
+            for (int x = 0; x < model.CurrentManga.Chapters.Count; x++)
+            {
+                Chapter c = model.CurrentManga.Chapters[x];
+
+            }
+
+            //var collectionGroups = groupedItemsViewSource.View.CollectionGroups;
+            //((ListViewBase)this.Zoom.ZoomedOutView).ItemsSource = collectionGroups;
 
             if (!loaded)
             {
@@ -80,7 +97,7 @@ namespace MangaApp
                         chapters.IsItemClickEnabled = true;
                         chapters.ItemClick += (a, b) =>
                         {
-                            Frame.Navigate(typeof(ReaderPage), new object[] { model.CurrentManga.Chapters.IndexOf(b.ClickedItem as Chapter), model.CurrentManga });
+                            Frame.Navigate(typeof(ViewerPage), new object[] { model.CurrentManga.Chapters.IndexOf(b.ClickedItem as Chapter), model.CurrentManga });
                         };
                     }
                 };

@@ -24,7 +24,7 @@
             <Grid Height="60" Width="150"/>
         </DataTemplate>
         <DataTemplate x:Key="DataTemplate1">
-            <Grid Height="75" VerticalAlignment="Top"/>
+            <Grid Height="0" VerticalAlignment="Top"/>
         </DataTemplate>
         <DataTemplate x:Key="DataTemplate2">
             <Grid Height="400"/>
@@ -163,8 +163,8 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel>
-                                    <Grid Background="{Binding Source={StaticResource Brand}}" Margin="5">
-                                        <TextBlock Padding="5" FontFamily="Segoe WP" FontWeight="Light" FontSize="22" Text="{Binding Group.Updated}"/>
+                                    <Grid Margin="5">
+                                        <TextBlock Foreground="{Binding Source={StaticResource Brand}}" Padding="5" FontFamily="Segoe WP" FontWeight="Light" FontSize="22" Text="{Binding Group.Updated}"/>
                                     </Grid>
                                 </StackPanel>
                             </DataTemplate>

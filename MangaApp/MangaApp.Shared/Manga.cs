@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using System.Globalization;
 using Windows.UI.Xaml.Media.Imaging;
@@ -19,7 +20,16 @@ namespace MangaApp
         public string Name { get; set; }
         public string Url { get; set; }
 
-        public bool Favorite { get; set; }
+        public bool Favorite
+        {
+            get { return AppModel.Current.FavoriteManga.Contains(Url); }
+            set
+            {
+                if (value) AppModel.Current.FavoriteManga.Add(Url);
+                else AppModel.Current.FavoriteManga.Remove(Url);
+            }
+        }
+
         public string _image;
         public string Image
         {
@@ -39,6 +49,12 @@ namespace MangaApp
         public string _updated;
         public string Updated { get { return _updated; } set { _updated = value; RaisePropertyChanged(); } }
 
+        public string AlternateNames { get; set; }
+        public string Status { get; set; }
+        public string Author { get; set; }
+        public string Artist { get; set; }
+        public string Year { get; set; }
+
         public ObservableCollection<Chapter> Chapters{get;set;}
 
         public Manga()
@@ -47,7 +63,7 @@ namespace MangaApp
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void RaisePropertyChanged([CallerMemberName] string caller = "")
+        public void RaisePropertyChanged([CallerMemberName] string caller = "")
         {
             if (PropertyChanged != null)
             {
@@ -56,7 +72,7 @@ namespace MangaApp
         }
     }
 
-    public class Chapter
+    public class Chapter : INotifyPropertyChanged
     {
 
         public bool Saved;
@@ -64,8 +80,23 @@ namespace MangaApp
         public string Url { get; set; }
         public int ImageCount { get; set; }
 
+
+        public Visibility ReadBadge
+        {
+            get { return AppModel.Current.ReadChapters.Contains(Url) ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
         public ObservableCollection<string> Images { get; set; }
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged([CallerMemberName] string caller = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(caller));
+            }
+        }
         public Chapter()
         {
             Images = new ObservableCollection<string>();

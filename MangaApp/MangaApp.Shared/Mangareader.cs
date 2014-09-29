@@ -102,7 +102,7 @@ namespace MangaApp
             foreach (HtmlNode cont in htmlDocument.DocumentNode.Descendants("tr").Where(x => x.Attributes.Contains("class") && x.Attributes["class"].Value == "c3"))
             {
                 var link = cont.Descendants("a").First();
-                //Debug.WriteLine(link.Descendants("strong").ElementAt(0).InnerText);
+
                 var m = new Manga
                 {
                     Name = link.FirstChild.InnerText,
@@ -110,29 +110,40 @@ namespace MangaApp
                     Updated = cont.Descendants("td").ElementAt(2).InnerText
                 };
                 mangas.Add(m);
-                //m.Chapters.Clear();
 
                 
                 htmlDocument2.OptionFixNestedTags = true;
                 htmlDocument2.LoadHtml(await Utils.DownloadPageStringAsync(m.Url));
 
                 m.Image = htmlDocument2.DocumentNode.Descendants("div").Where(x => x.Id == "mangaimg").First().Descendants().First().Attributes["src"].Value;
+                var details =
+                    htmlDocument2.DocumentNode.Descendants("div")
+                        .Where(x => x.Id == "mangaproperties")
+                        .First()
+                        .Descendants("td")
+                        .Select(y=>y.InnerText).ToList();
+
+                m.AlternateNames = details[3];
+                m.Year = details[5];
+                m.Status = details[7];
+                m.Author = details[9];
+                m.Artist = details[11];
                 /*
                 foreach (HtmlNode link2 in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td"))
                 {
                     //Debug.WriteLine("Manga=" + m.Name + " Inner = " + link.InnerText);
 
                     m.Chapters.Add(new Chapter { Name = link2.InnerText, Url = link2.Attributes["href"].Value });
-                }
-                */
-                /*if (mangas.Count == 15)
+                }*/
+               
+                if (mangas.Count == 5)
                 {
                     foreach (Manga mx in mangas) Latest.Add(mx);
                     mangas.Clear();
-                    //DataChanged(this, null);
-                    //return;
+                    DataChanged(this, null);
+                    return;
                     
-                }*/
+                }
 
                //if (Latest.Count > 4) return;
                 Latest.Add(m);
@@ -234,43 +245,44 @@ namespace MangaApp
 
             foreach (HtmlNode link in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td" && x.ParentNode.Descendants("div").Any(y => y.Attributes["class"].Value == "chico_manga")))
             {
-                manga.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n", "").Replace(manga.Name, ""), Url = link.Attributes["href"].Value });
+                manga.Chapters.Insert(0, new Chapter { Name = link.ParentNode.InnerText.Replace("\n", "").Replace(manga.Name, "").Replace(":"," "), Url = link.Attributes["href"].Value });
             }
 
             manga.Description = htmlDocument2.DocumentNode.Descendants("div").First(x => x.Id == "readmangasum").Descendants("p").First().InnerText;
         }
 
+
         public async void GetImages(Chapter c)
         {
             c.Images.Clear();
-                //images.ItemsSource = c.Images;
-                HtmlDocument htmlDocument2 = new HtmlDocument();
-                htmlDocument2.OptionFixNestedTags = true;
-                htmlDocument2.LoadHtml(await Utils.DownloadPageStringAsync(("http://www.mangareader.net" + c.Url)));
+            //images.ItemsSource = c.Images;
+            HtmlDocument htmlDocument2 = new HtmlDocument();
+            htmlDocument2.OptionFixNestedTags = true;
+            htmlDocument2.LoadHtml(await Utils.DownloadPageStringAsync(("http://www.mangareader.net" + c.Url)));
 
-                List<string> holder = new List<string>();
+            List<string> holder = new List<string>();
 
-                var items = htmlDocument2.DocumentNode.Descendants("option").Where((x =>
-                        x.ParentNode.Id == "pageMenu"));
-                /*for (int x = 0; x < items.Count(); x++)
+            var items = htmlDocument2.DocumentNode.Descendants("option").Where((x =>
+                x.ParentNode.Id == "pageMenu"));
+            /*for (int x = 0; x < items.Count(); x++)
                 {
                     FlipViewItem item = new FlipViewItem();
 
                     images.Items.Add(item);
                 }*/
 
-                int count = 0;
-                foreach (HtmlNode link in items)
+            foreach (HtmlNode link in items)
+            {
+                await Task.Run(async () =>
                 {
-
                     HtmlDocument htmlDocument3 = new HtmlDocument();
                     htmlDocument3.OptionFixNestedTags = true;
-                    htmlDocument3.LoadHtml(await Utils.DownloadPageStringAsync(("http://www.mangareader.net" + link.Attributes["value"].Value)));
+                    htmlDocument3.LoadHtml(
+                        await
+                            Utils.DownloadPageStringAsync(("http://www.mangareader.net" + link.Attributes["value"].Value)));
 
-                    foreach (HtmlNode link2 in htmlDocument3.DocumentNode.Descendants("img").Where(x => x.Id == "img"))
-                    {
-                       
-                        c.Images.Add(link2.Attributes["src"].Value);
+                    var link2 = htmlDocument3.DocumentNode.Descendants("img").First();
+                    c.Images.Add(link2.Attributes["src"].Value);
 
                         /*(images.Items.ElementAt(count) as FlipViewItem).Content = new ScrollViewer
                         {
@@ -282,10 +294,76 @@ namespace MangaApp
                             MaxZoomFactor = 3,
                             MinZoomFactor = 1
                         };*/
-                        count++;
-                        break;
-                    }
+
+                    
+                });
+
+            }
+            if(DataChanged !=null)DataChanged(this, null);
         }
-    }
+        public ObservableCollection<Manga> _CategoryMangas = new ObservableCollection<Manga>();
+        public ObservableCollection<Manga> CategoryMangas { get { return _CategoryMangas; } }
+             
+        public List<string> categoryURL = new List<string>()
+        {
+            "Action",
+            "Adventure",
+            "Comedy",
+            "Demons",
+            "Drama",
+            "Ecchi",
+            "Fantasy",
+            "Gender-bender",
+            "Harem",
+            "Historical",
+            "Horror",
+            "Josei"
+        };
+        public List<string> CategoryURL { get { return categoryURL; } } 
+
+        public async void GetMangasFromCategory(int category=0)
+        {
+            CategoryMangas.Clear();
+            string query = "http://www.mangareader.net/popular/" +  CategoryURL[category].ToLower();
+
+            HtmlDocument htmlDocument = new HtmlDocument();
+            htmlDocument.OptionFixNestedTags = true;
+            htmlDocument.LoadHtml(await Utils.DownloadPageStringAsync(query));
+
+
+            foreach (HtmlNode link in htmlDocument.DocumentNode.Descendants("div").Where(x => x.Attributes.Contains("class") && x.Attributes["class"].Value == "mangaresultinner"))
+            {
+                if (CategoryMangas.Count == 5) break;
+                var lk = link.Descendants("a").First();
+                
+
+                Manga m = 
+                new Manga {Name = lk.InnerText, Url = "http://www.mangareader.net" + lk.Attributes["href"].Value};
+
+                m.Chapters.Clear();
+                HtmlDocument htmlDocument2 = new HtmlDocument();
+                htmlDocument2.OptionFixNestedTags = true;
+                htmlDocument2.LoadHtml(await Utils.DownloadPageStringAsync(m.Url));
+
+                var txt = link.Descendants("div").Where(x => x.Attributes.Contains("class") && x.Attributes["class"].Value == "imgsearchresults").First();
+                var tt = txt.Attributes["style"].Value.Replace("background-image:url('", "").Replace("')", "");
+                m.Image = tt;
+
+                CategoryMangas.Add(m);
+                /*foreach (HtmlNode link2 in htmlDocument2.DocumentNode.Descendants("a").Where(x => x.Attributes.Contains("href") && x.ParentNode.OriginalName == "td"))
+                {
+                    //Debug.WriteLine("Manga=" + m.Name + " Inner = " + link.InnerText);
+                    m.Chapters.Add(new Chapter { Name = link2.InnerText.Replace(":", "\n"), Url = link2.Attributes["href"].Value });
+                }*/
+
+            }
+            DataChanged(this, null);
+        }
+
+        /*public async Task<Manga> PopulateManga(string url)
+        {
+            Manga m = new Manga();
+            
+        }*/
     }
 }
